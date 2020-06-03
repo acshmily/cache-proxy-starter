@@ -1,10 +1,12 @@
 package service;
 
 import org.springframework.boot.json.JsonParseException;
+import struct.ZSetTypedTuple;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -75,12 +77,6 @@ public interface CacheTemplate {
      */
     <T> T get(String key,Class<T> valueType) throws IOException, JsonParseException;
 
-    /**
-     * 默认返回String值
-     * @param key
-     * @return
-     */
-    String get(String key);
     /**
      * 根据keykey及hashKey获取值并反序列化返回
      * @param key
@@ -293,7 +289,258 @@ public interface CacheTemplate {
      */
     <T> T listRightPop(String key,Class<T> valueType)  throws IOException, JsonParseException;
 
+    /**
+     * Add given {@code objects} to set at {@code key}.
+     * @param key
+     * @param objects
+     * @return
+     */
+    Long setAdd(String key,Object ...objects);
 
+    /**
+     * Remove given {@code objects} from set at {@code key} and return the number of removed elements.
+     * @param key
+     * @param objects
+     * @return
+     */
+    Long setRemove(String key,Object ...objects);
+
+    /**
+     * Get size of set at {@code key}.
+     * @param key
+     * @return
+     */
+    Long setSize(String key);
+
+    /**
+     * Check if set at {@code key} contains {@code value}.
+     * @param key
+     * @param o
+     * @return
+     */
+    Boolean setIsMember(String key,Object o);
+
+    /**
+     * 根据key获取指定Set，并序列化返回
+     * @param key
+     * @param valueType
+     * @return
+     */
+    <T> Set<T> setMember(String key, Class<T> valueType);
+
+    /**
+     * 根据key获取指定Set
+     * @param key
+     * @return
+     */
+    Set<String> setMember(String key);
+
+    /**
+     * Add {@code value} to a sorted set at {@code key}, or update its {@code score} if it already exists.
+     * @param key
+     * @param value
+     * @param score
+     * @return
+     */
+    Boolean zSetAddOne(String key, Object value, double score);
+
+    /**
+     * Add {@code tuples} to a sorted set at {@code key}, or update its {@code score} if it already exists.
+     * @param key
+     * @param tuples
+     * @return
+     */
+    Long zSetAdd(String key, Set<ZSetTypedTuple<Object>> tuples);
+
+    /**
+     * Remove {@code values} from sorted set. Return number of removed elements.
+     * @param key
+     * @param objects
+     * @return
+     */
+    Long zSetRemove(String key,Object ...objects);
+
+    /**
+     * Increment the score of element with {@code value} in sorted set by {@code increment}.
+     * @param key
+     * @param value
+     * @param delta
+     * @return
+     */
+    Double zSetIncrementScore(String key,Object value,double delta);
+
+    /**
+     * Determine the index of element with {@code value} in a sorted set.
+     * @param key
+     * @param object
+     * @return
+     */
+    Long zSetRank(String key,Object object);
+
+    /**
+     * Determine the index of element with {@code value} in a sorted set when scored high to low.
+     * @param key
+     * @param object
+     * @return
+     */
+    Long zSetReverseRank(String key,Object object);
+
+    /**
+     * Get set of {@link ZSetTypedTuple}s between {@code start} and {@code end} from sorted set.
+     * @param key
+     * @param start
+     * @param end
+     * @param valueType
+     * @return
+     */
+    <T> Set<ZSetTypedTuple<T>> zSetRangeWithScores(String key,long start,long end,Class<T> valueType);
+
+    /**
+     * Get set of {@link ZSetTypedTuple}s in range from {@code start} to {@code end} where score is between {@code min} and
+     * @param key
+     * @param min
+     * @param max
+     * @param offset
+     * @param count
+     * @param valueType
+     * @return
+     */
+    <T> Set<ZSetTypedTuple<T>> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
+
+    /**
+     * Get set of {@link ZSetTypedTuple} in range from {@code start} to {@code end} where score is between {@code min} and
+     * {@code max} from sorted set ordered high -> low.
+     *
+     * @param key
+     * @param min
+     * @param max
+     * @param offset
+     * @param count
+     * @param valueType
+     * @return
+     */
+    <T> Set<ZSetTypedTuple<T>> zSetReverseRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
+
+    /**
+     * Count number of elements within sorted set with scores between {@code min} and {@code max}.
+     * @param key
+     * @param min
+     * @param max
+     * @return
+     */
+    Long zSetCount(String key,double min, double max);
+
+    /**
+     * Get the size of sorted set with {@code key}.
+     * @param key
+     * @return
+     */
+    Long zSetCard(String key);
+
+    /**
+     * Get the score of element with {@code value} from sorted set with key {@code key}.
+     * @param key
+     * @param object
+     * @return
+     */
+    Double zSetScore(String key,Object object);
+
+    /**
+     * Remove elements in range between {@code start} and {@code end} from sorted set with {@code key}.
+     * @param key
+     * @param start
+     * @param end
+     * @return
+     */
+    Long zSetRemoveRange(String key,long start,long end);
+
+    /**
+     * Remove elements with scores between {@code min} and {@code max} from sorted set with {@code key}.
+     * @param key
+     * @param min
+     * @param max
+     * @return
+     */
+    Long zSetRemoveByScore(String key,double min, double max);
+
+    /**
+     * Set {@code value} for {@code key}.
+     * @param key
+     * @param value
+     */
+    void stringSet(String key,String value);
+
+    /**
+     * Set the {@code value} and expiration {@code timeout} for {@code key}.
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     */
+    void stringSet(String key,String value, long timeout, TimeUnit unit);
+
+    /**
+     * Set {@code key} to hold the string {@code value} if {@code key} is absent.
+     * @param key
+     * @param value
+     * @return
+     */
+    Boolean stringSetIfAbsent(String key,String value);
+
+    /**
+     * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    Boolean stringSetIfAbsent(String key,String value,long timeout, TimeUnit unit);
+
+    /**
+     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple}.
+     * @param map
+     */
+    void stringMultiSet(Map<String,String> map);
+
+    /**
+     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple} only if the provided key does
+     * not exist.
+     * @param map
+     * @return
+     */
+    Boolean stringMultiSetIfAbsent(Map<String,String> map);
+
+
+    /**
+     * 默认返回String值
+     * @param key
+     * @return
+     */
+    String stringGet(String key);
+
+    /**
+     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
+     * @param keys
+     * @return
+     */
+    List<String> stringMultiGet(String ...keys);
+
+    /**
+     * Increment an integer value stored as string value under {@code key} by {@code delta}.
+     * @param key
+     * @param delta
+     * @return
+     */
+    Long stringIncrement(String key,long delta);
+
+    /**
+     * Decrement an integer value stored as string value under {@code key} by {@code delta}.
+     * @param key
+     * @param delta
+     * @return
+     */
+    Long stringDecrement(String key,long delta);
 }
 
 
