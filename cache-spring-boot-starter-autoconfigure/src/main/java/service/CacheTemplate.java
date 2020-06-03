@@ -393,7 +393,7 @@ public interface CacheTemplate {
      * @param valueType
      * @return
      */
-    <T> Set<ZSetTypedTuple<T>> zSetRangeWithScores(String key,long start,long end,Class<T> valueType);
+    <T> Map<T, Double> zSetRangeWithScores(String key, long start, long end, Class<T> valueType);
 
     /**
      * Get set of {@link ZSetTypedTuple}s in range from {@code start} to {@code end} where score is between {@code min} and
@@ -405,7 +405,7 @@ public interface CacheTemplate {
      * @param valueType
      * @return
      */
-    <T> Set<ZSetTypedTuple<T>> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
+    <T> Map<T, Double> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
 
     /**
      * Get set of {@link ZSetTypedTuple} in range from {@code start} to {@code end} where score is between {@code min} and
@@ -419,7 +419,7 @@ public interface CacheTemplate {
      * @param valueType
      * @return
      */
-    <T> Set<ZSetTypedTuple<T>> zSetReverseRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
+    <T> Map<T, Double> zSetReverseRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
 
     /**
      * Count number of elements within sorted set with scores between {@code min} and {@code max}.
