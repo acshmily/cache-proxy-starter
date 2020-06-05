@@ -1,7 +1,6 @@
-package service;
+package cn.besttone.cachetemplate.autoconfigure.service;
 
 import org.springframework.boot.json.JsonParseException;
-import struct.ZSetTypedTuple;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @ModifyBy:
  **/
 public interface CacheTemplate {
+    String helloWord();
     /**
      * 指定键过期
      * @param key
@@ -350,7 +350,7 @@ public interface CacheTemplate {
      * @param tuples
      * @return
      */
-    Long zSetAdd(String key, Set<ZSetTypedTuple<Object>> tuples);
+    Long zSetAdd(String key, Map<String,Object> tuples);
 
     /**
      * Remove {@code values} from sorted set. Return number of removed elements.
@@ -386,7 +386,7 @@ public interface CacheTemplate {
     Long zSetReverseRank(String key,Object object);
 
     /**
-     * Get set of {@link ZSetTypedTuple}s between {@code start} and {@code end} from sorted set.
+     * Get set of  between {@code start} and {@code end} from sorted set.
      * @param key
      * @param start
      * @param end
@@ -396,7 +396,7 @@ public interface CacheTemplate {
     <T> Map<T, Double> zSetRangeWithScores(String key, long start, long end, Class<T> valueType);
 
     /**
-     * Get set of {@link ZSetTypedTuple}s in range from {@code start} to {@code end} where score is between {@code min} and
+     * Get set of  in range from {@code start} to {@code end} where score is between {@code min} and
      * @param key
      * @param min
      * @param max
@@ -408,7 +408,7 @@ public interface CacheTemplate {
     <T> Map<T, Double> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count,Class<T> valueType);
 
     /**
-     * Get set of {@link ZSetTypedTuple} in range from {@code start} to {@code end} where score is between {@code min} and
+     * Get set of in range from {@code start} to {@code end} where score is between {@code min} and
      * {@code max} from sorted set ordered high -> low.
      *
      * @param key

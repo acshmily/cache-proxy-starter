@@ -6,6 +6,7 @@
 	<modules>
 		<module>cache-spring-boot-starter</module>
 		<module>cache-spring-boot-starter-autoconfigure</module>
+		<module>cache-client-test</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -67,13 +68,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+
 
 </project>
