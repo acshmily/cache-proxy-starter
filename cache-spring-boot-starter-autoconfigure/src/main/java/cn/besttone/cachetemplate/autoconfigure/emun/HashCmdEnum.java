@@ -6,6 +6,6 @@ package cn.besttone.cachetemplate.autoconfigure.emun;
  * @Date:Created in 4:25 下午 2020/6/5
  * @ModifyBy:
  **/
-public enum HashCmdEnum {
+public enum HashCmdEnum implements CacheTemplateCmd {
     delete,hasKey,get,multiGet,increment,size,put,putAll,entries
 }

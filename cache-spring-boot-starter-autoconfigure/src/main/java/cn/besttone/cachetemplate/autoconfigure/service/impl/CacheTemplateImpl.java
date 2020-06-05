@@ -1,9 +1,15 @@
 package cn.besttone.cachetemplate.autoconfigure.service.impl;
 
+import cn.besttone.cachetemplate.autoconfigure.bean.RequestBean;
+import cn.besttone.cachetemplate.autoconfigure.emun.CacheTemplateCmd;
+import cn.besttone.cachetemplate.autoconfigure.emun.RequestPath;
 import cn.besttone.cachetemplate.autoconfigure.service.CacheTemplate;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.boot.json.JsonParseException;
 
@@ -21,10 +27,18 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 public class CacheTemplateImpl implements CacheTemplate {
-    public CacheTemplateImpl(OkHttpClient okHttpClient) {
-        this.okHttpClient = okHttpClient;
+    public CacheTemplateImpl() {
     }
 
+    public CacheTemplateImpl(OkHttpClient okHttpClient, String urlPath) {
+        this.okHttpClient = okHttpClient;
+        this.urlPath = urlPath;
+    }
+    public CacheTemplateImpl(OkHttpClient okHttpClient, String urlPath,ObjectMapper objectMapper) {
+        this.okHttpClient = okHttpClient;
+        this.urlPath = urlPath;
+        this.objectMapper = objectMapper;
+    }
     @Override
     public String helloWord() {
         Request request = new Request.Builder().url("http://www.baidu.com").build();
@@ -817,10 +831,55 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
 
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
 
+    public void setOkHttpClient(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
+    }
 
+    public String getUrlPath() {
+        return urlPath;
+    }
+
+    public void setUrlPath(String urlPath) {
+        this.urlPath = urlPath;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public void setObjectMapper(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    /**
+     * 输出返回定义
+     * @param requestPath
+     * @param requestBean
+     * @return
+     */
+    private String call(RequestPath requestPath,  RequestBean requestBean) throws JsonProcessingException {
+        Request request = new Request.Builder().
+                url(urlPath + requestPath.getValue()).
+                post(RequestBody.create(JSON_TYPE,objectMapper.writeValueAsString(requestBean)))
+                .build();
+        String responseBody = null;
+        try {
+            Response response = okHttpClient.newCall(request).execute();
+            // 请求成功
+            if(response.isSuccessful()){
+                responseBody = response.body().string();
+            }
+        } catch (IOException e) {
+            log.warn("本次调用失败,地址：{},参数:{},原因:{}",request.url(),request.body(),e.getMessage());
+        }
+        return responseBody;
+    }
     private OkHttpClient okHttpClient;
-
-
+    private String urlPath;
+    private ObjectMapper objectMapper;
 
 }

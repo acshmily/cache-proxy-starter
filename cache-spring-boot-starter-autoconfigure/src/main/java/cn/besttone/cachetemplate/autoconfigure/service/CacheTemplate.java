@@ -1,5 +1,6 @@
 package cn.besttone.cachetemplate.autoconfigure.service;
 
+import okhttp3.MediaType;
 import org.springframework.boot.json.JsonParseException;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @ModifyBy:
  **/
 public interface CacheTemplate {
+    MediaType JSON_TYPE = MediaType.parse("application/json");
     String helloWord();
     /**
      * 指定键过期

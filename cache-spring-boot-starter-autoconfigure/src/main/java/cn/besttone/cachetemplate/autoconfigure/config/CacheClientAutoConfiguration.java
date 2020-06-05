@@ -1,9 +1,15 @@
 package cn.besttone.cachetemplate.autoconfigure.config;
 
 import cn.besttone.cachetemplate.autoconfigure.service.CacheTemplate;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +42,7 @@ public class CacheClientAutoConfiguration {
                 cacheClientProperties.getMaxPoolSize(),
                 cacheClientProperties.getAwaitTerminationSeconds(),
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(),
+                new LinkedBlockingQueue<>(),
                 new ThreadPoolExecutor.CallerRunsPolicy()
         );
         log.info("<-----------初始化缓存插件线程池完成-------------<");
@@ -53,19 +59,15 @@ public class CacheClientAutoConfiguration {
     public OkHttpClient okHttpClient(){
         log.info(">-----------开始初始化缓存插件OkHttp------------>");
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @NotNull
-                    @Override
-                    public Response intercept(@NotNull Chain chain) throws IOException {
-                        Request request = chain.request().newBuilder()
-                                .addHeader("username",cacheClientProperties.getUserName())
-                                .addHeader("password",cacheClientProperties.getPassword())
-                                .addHeader("requestId", UUID.randomUUID().toString())
-                                .build();
+                .addInterceptor(chain -> {
+                    Request request = chain.request().newBuilder()
+                            .addHeader("username",cacheClientProperties.getUserName())
+                            .addHeader("password",cacheClientProperties.getPassword())
+                            .addHeader("requestId", UUID.randomUUID().toString())
+                            .build();
 
-                        return chain.proceed(request);
+                    return chain.proceed(request);
 
-                    }
                 })
                 .dispatcher(new Dispatcher(cacheExecutor()))
                 // 自定义连接池大小
@@ -90,8 +92,27 @@ public class CacheClientAutoConfiguration {
      * @return
      */
     @Bean
+    @ConditionalOnClass(ObjectMapper.class)
     public CacheTemplate cacheTemplate(){
-        return new CacheTemplateImpl(okHttpClient());
+        return new CacheTemplateImpl(okHttpClient(),cacheClientProperties.getUrl(),objectMapper);
+
+    }
+    @Bean
+    @ConditionalOnMissingBean(ObjectMapper.class)
+    public CacheTemplate cacheTemplateWithOutSpringMvc(){
+        return new CacheTemplateImpl(okHttpClient(),cacheClientProperties.getUrl(),objectMapper());
+
+    }
+    @Bean
+    @ConditionalOnMissingBean(ObjectMapper.class)
+    public ObjectMapper objectMapper(){
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 转换为格式化的json
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        // 如果json中有新增的字段并且是实体类类中不存在的，不报错
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
 
     }
 
@@ -99,7 +120,8 @@ public class CacheClientAutoConfiguration {
 
 
 
-
     @Resource
     private CacheClientProperties cacheClientProperties;
+    @Resource
+    private ObjectMapper objectMapper;
 }

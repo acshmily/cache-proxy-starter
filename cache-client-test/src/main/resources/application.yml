@@ -2,3 +2,5 @@ haobai:
   cache:
     user-name: test
     password: test
+server:
+  port: 8081
