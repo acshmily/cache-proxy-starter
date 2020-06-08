@@ -72,12 +72,10 @@ public interface CacheTemplate {
     /**
      * 按照key获取值并反序列化成实例返回
      * @param key
-     * @param valueType
      * @return
-     * @throws IOException
-     * @throws JsonParseException
+
      */
-    <T> T get(String key,Class<T> valueType) throws IOException, JsonParseException;
+   String get(String key);
 
     /**
      * 根据keykey及hashKey获取值并反序列化返回

@@ -1,22 +1,24 @@
 package cn.besttone.cachetemplate.autoconfigure.service.impl;
 
 import cn.besttone.cachetemplate.autoconfigure.bean.RequestBean;
-import cn.besttone.cachetemplate.autoconfigure.emun.CacheTemplateCmd;
-import cn.besttone.cachetemplate.autoconfigure.emun.RequestPath;
+import cn.besttone.cachetemplate.autoconfigure.bean.ResponseBean;
+import cn.besttone.cachetemplate.autoconfigure.emun.*;
 import cn.besttone.cachetemplate.autoconfigure.service.CacheTemplate;
+import cn.besttone.cachetemplate.autoconfigure.utils.ObjectUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.json.JsonParseException;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,7 +62,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param timeUnit
      */
     @Override
-    public void expire(String key, long timeout, TimeUnit timeUnit) {
+    public void expire(@NotNull String key, @NotNull long timeout, @NotNull TimeUnit timeUnit) {
+        RequestBean request = new RequestBean();
+        request.setCmd(CommonCmdEnum.expire);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, timeout, timeUnit));
+        request.setArgs(args);
+        call(RequestPath.COMMON,request);
+
 
     }
 
@@ -71,7 +79,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param timestamp
      */
     @Override
-    public void expireAt(String key, long timestamp) {
+    public void expireAt(@NotNull String key,@NotNull long timestamp) {
+        RequestBean request = new RequestBean();
+        request.setCmd(CommonCmdEnum.expireAt);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, timestamp));
+        request.setArgs(args);
+        call(RequestPath.COMMON,request);
 
     }
 
@@ -84,7 +97,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long getExpire(String key, TimeUnit timeUnit) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(CommonCmdEnum.expireAt);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, timeUnit));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.COMMON,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -94,7 +112,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void delete(String... keys) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(CommonCmdEnum.delete);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(keys));
+        request.setArgs(args);
+        call(RequestPath.COMMON,request);
     }
 
     /**
@@ -105,7 +127,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Boolean hasKey(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(CommonCmdEnum.hasKey);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.COMMON,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -116,6 +143,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void deleteHashKeys(String key, String... hashKeys) {
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.delete);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKeys));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
 
     }
 
@@ -128,21 +160,29 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Boolean hasHashKey(String key, String hashKey) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.hasKey);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
-     * 按照key获取值并反序列化成实例返回
+     * 按照key获取值并反序列化成实例返回(String 默认get)
      *
      * @param key
-     * @param valueType
      * @return
-     * @throws IOException
-     * @throws JsonParseException
      */
     @Override
-    public <T> T get(String key, Class<T> valueType) throws IOException, JsonParseException {
-        return null;
+    public String get(String key){
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.get);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return responseBean.getData();
+
     }
 
     /**
@@ -157,7 +197,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> T hashGet(String key, String hashKey, Class<T> valueType) throws IOException, JsonParseException {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.get);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return objectMapper.readValue(responseBean.getData(),valueType);
     }
 
     /**
@@ -169,7 +214,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String hashGet(String key, String hashKey) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.get);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return responseBean.getData();
     }
 
     /**
@@ -184,7 +234,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> List<T> hashMultiGet(String key, Class<T> valueType, String... hashKeys) throws IOException, JsonParseException {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.multiGet);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKeys));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return objectMapper.readValue(responseBean.getData(),new TypeReference<List<T>>(){});
     }
 
     /**
@@ -861,17 +916,18 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param requestBean
      * @return
      */
-    private String call(RequestPath requestPath,  RequestBean requestBean) throws JsonProcessingException {
-        Request request = new Request.Builder().
-                url(urlPath + requestPath.getValue()).
-                post(RequestBody.create(JSON_TYPE,objectMapper.writeValueAsString(requestBean)))
-                .build();
-        String responseBody = null;
+    private ResponseBean call(RequestPath requestPath, RequestBean requestBean){
+        Request request = null;
+        ResponseBean responseBody = null;
         try {
+            request = new Request.Builder().
+                    url(urlPath + requestPath.getValue()).
+                    post(RequestBody.create(JSON_TYPE,objectMapper.writeValueAsString(requestBean)))
+                    .build();
             Response response = okHttpClient.newCall(request).execute();
             // 请求成功
             if(response.isSuccessful()){
-                responseBody = response.body().string();
+                responseBody = objectMapper.readValue(response.body().string(),ResponseBean.class);
             }
         } catch (IOException e) {
             log.warn("本次调用失败,地址：{},参数:{},原因:{}",request.url(),request.body(),e.getMessage());

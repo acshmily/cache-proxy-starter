@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -17,8 +19,8 @@ import javax.annotation.Resource;
 @RestController
 public class HelloController {
     @RequestMapping
-    String test(){
-        return cacheTemplate.helloWord();
+    String test() throws IOException {
+       return cacheTemplate.get("2");
     }
     @Resource
     private CacheTemplate cacheTemplate;
