@@ -542,6 +542,15 @@ public interface CacheTemplate {
      * @return
      */
     Long stringDecrement(String key,long delta);
+
+    /**
+     * 转换类型
+     * @param object
+     * @param valueType
+     * @param <T>
+     * @return
+     */
+    <T> T convertObject(Object object,Class<T> valueType) throws JsonProcessingException;
 }
 
 

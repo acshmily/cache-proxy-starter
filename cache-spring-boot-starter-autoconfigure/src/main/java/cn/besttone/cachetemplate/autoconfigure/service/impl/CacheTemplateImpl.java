@@ -320,11 +320,13 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void hashPutAll(String key, Map<String, Object> map) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.putAll);
-//        Map<String,Object> result = new HashMap<>(map.size());
-//        for(Map.Entry<String,Object> entry:map.entrySet()){
-//            result.put(entry.getKey(),objectMapper.writeValueAsString(entry.getValue()));
-//        }
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(map)));
+        Map<String,Object> result = new HashMap<>(map.size());
+        for(Map.Entry<String,Object> entry:map.entrySet()){
+            result.put(entry.getKey(),objectMapper.writeValueAsString(entry.getValue()));
+        }
+       // LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(map)));
+//        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,map));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,result));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH,request);
     }
@@ -1185,6 +1187,10 @@ public class CacheTemplateImpl implements CacheTemplate {
             log.warn("本次调用失败,地址：{},参数:{},原因:{}",request.url(),request.body(),e.getMessage());
         }
         return responseBody;
+    }
+    @Override
+    public <T> T convertObject(Object object,Class<T> valueType) throws JsonProcessingException {
+        return objectMapper.readValue(object.toString(),valueType);
     }
     private OkHttpClient okHttpClient;
     private String urlPath;

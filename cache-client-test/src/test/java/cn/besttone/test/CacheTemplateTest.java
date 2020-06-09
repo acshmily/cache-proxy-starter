@@ -1,8 +1,10 @@
 package cn.besttone.test;
 
 import cn.besttone.cachetemplate.autoconfigure.service.CacheTemplate;
+import cn.besttone.test.bean.Role;
 import cn.besttone.test.bean.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,11 +34,16 @@ public class CacheTemplateTest {
     void test1() throws IOException {
         Map<String,Object> map = new HashMap<>();
         map.put("1",new User("test","password"));
-        map.put("2",new User("test1","password"));
+        map.put("2",new Role("test1","password"));
         cacheTemplate.hashPutAll("test3",map);
         //System.out.println(cacheTemplate.hashEntries("test2"));
-        Map<String,User> result = cacheTemplate.hashEntries("test2",User.class);
-        System.out.println(result.get("1"));
+        Map<String,Object> result = cacheTemplate.hashEntries("test3",Object.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+
+        Role role = cacheTemplate.convertObject(result.get("2"),Role.class);
+        System.out.println(role);
+
     }
 
     @Resource
