@@ -25,4 +25,13 @@ public class ObjectUtils {
     public static Boolean convertToBoolean(Object o){
         return Boolean.parseBoolean(String.valueOf(o));
     }
+
+    /**
+     * object 转 double
+     * @param o
+     * @return
+     */
+    public static Double convertToDouble(Object o ){
+        return Double.parseDouble(String.valueOf(o));
+    }
 }

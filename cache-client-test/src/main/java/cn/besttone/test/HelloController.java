@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -19,8 +20,8 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class HelloController {
     @RequestMapping
-    String test() throws IOException {
-       return cacheTemplate.get("2");
+    List<Object> test() throws IOException {
+       return cacheTemplate.listRange("list",0,-1,Object.class);
     }
     @Resource
     private CacheTemplate cacheTemplate;

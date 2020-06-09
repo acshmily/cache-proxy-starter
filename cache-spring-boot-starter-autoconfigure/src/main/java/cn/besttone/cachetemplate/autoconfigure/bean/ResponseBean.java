@@ -12,5 +12,5 @@ import lombok.Data;
 public class ResponseBean {
     String code;
     String message;
-    String data;
+    Object data;
 }

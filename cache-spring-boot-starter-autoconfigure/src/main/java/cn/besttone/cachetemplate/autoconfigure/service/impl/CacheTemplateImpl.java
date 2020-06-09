@@ -8,6 +8,7 @@ import cn.besttone.cachetemplate.autoconfigure.utils.ObjectUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.ReferenceType;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -96,7 +97,7 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long getExpire(String key, TimeUnit timeUnit) {
+    public Long getExpire(@NotNull String key, TimeUnit timeUnit) {
         RequestBean request = new RequestBean();
         request.setCmd(CommonCmdEnum.expireAt);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, timeUnit));
@@ -126,7 +127,7 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Boolean hasKey(String key) {
+    public Boolean hasKey(@NotNull String key) {
         RequestBean request = new RequestBean();
         request.setCmd(CommonCmdEnum.hasKey);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
@@ -142,7 +143,7 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param hashKeys
      */
     @Override
-    public void deleteHashKeys(String key, String... hashKeys) {
+    public void deleteHashKeys(@NotNull String key, String... hashKeys) {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.delete);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKeys));
@@ -159,7 +160,7 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Boolean hasHashKey(String key, String hashKey) {
+    public Boolean hasHashKey(@NotNull String key, String hashKey) {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.hasKey);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
@@ -175,13 +176,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public String get(String key){
+    public String get(@NotNull String key){
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.get);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING,request);
-        return responseBean.getData();
+        return String.valueOf(responseBean.getData());
 
     }
 
@@ -196,13 +197,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @throws JsonParseException
      */
     @Override
-    public <T> T hashGet(String key, String hashKey, Class<T> valueType) throws IOException, JsonParseException {
+    public <T> T hashGet(@NotNull String key, String hashKey, Class<T> valueType) throws IOException, JsonParseException {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.get);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH,request);
-        return objectMapper.readValue(responseBean.getData(),valueType);
+        return objectMapper.readValue(String.valueOf(responseBean.getData()),valueType);
     }
 
     /**
@@ -213,13 +214,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public String hashGet(String key, String hashKey) {
+    public String hashGet(@NotNull String key, String hashKey) {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.get);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH,request);
-        return responseBean.getData();
+        return String.valueOf(responseBean.getData());
     }
 
     /**
@@ -233,13 +234,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @throws JsonParseException
      */
     @Override
-    public <T> List<T> hashMultiGet(String key, Class<T> valueType, String... hashKeys) throws IOException, JsonParseException {
+    public <T> List<T> hashMultiGet(@NotNull String key, @NotNull Class<T> valueType, String... hashKeys) throws IOException, JsonParseException {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.multiGet);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKeys));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH,request);
-        return objectMapper.readValue(responseBean.getData(),new TypeReference<List<T>>(){});
+        return objectMapper.readValue(String.valueOf(responseBean.getData()),new TypeReference<List<T>>(){});
     }
 
     /**
@@ -250,8 +251,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public List<String> hashMultiGet(String key, String... hashKeys) {
-        return null;
+    public List<String> hashMultiGet(@NotNull String key, String... hashKeys) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.multiGet);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKeys));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return objectMapper.readValue(String.valueOf(responseBean.getData()),new TypeReference<List<String>>(){});
     }
 
     /**
@@ -264,7 +270,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long hashIncrement(String key, String hashKey, long delta) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.increment);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey,delta));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -275,7 +286,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long hashSize(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.size);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -286,8 +302,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param value
      */
     @Override
-    public void hashPut(String key, String hashKey, Object value) {
-
+    public void hashPut(String key, String hashKey, Object value) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.put);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,hashKey,objectMapper.writeValueAsString(value)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
     }
 
     /**
@@ -297,8 +317,16 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param map
      */
     @Override
-    public void hashPutAll(String key, Map<String, Object> map) {
-
+    public void hashPutAll(String key, Map<String, Object> map) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.putAll);
+//        Map<String,Object> result = new HashMap<>(map.size());
+//        for(Map.Entry<String,Object> entry:map.entrySet()){
+//            result.put(entry.getKey(),objectMapper.writeValueAsString(entry.getValue()));
+//        }
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(map)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
     }
 
     /**
@@ -309,8 +337,15 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public <T> Map<String, T> hashEntries(String key, Class<T> valueType) {
-        return null;
+    public <T> Map<String, T> hashEntries(String key, Class<T> valueType) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(HashCmdEnum.entries);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.HASH,request);
+        return  (LinkedHashMap<String, T>) responseBean.getData();
+
+        //return objectMapper.readValue(responseBean.getData().toString(),new TypeReference<Map<String,T>>(){});
     }
 
     /**
@@ -320,8 +355,8 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Map<String, String> hashEntries(String key) {
-        return null;
+    public Map<String, String> hashEntries(String key) throws JsonProcessingException {
+        return hashEntries(key,String.class);
     }
 
     /**
@@ -334,8 +369,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public <T> List<T> listRange(String key, long start, long end, Class<T> valueType) {
-        return null;
+    public <T> List<T> listRange(String key, long start, long end, Class<T> valueType) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.range);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,start,end));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return (List<T>) responseBean.getData();
     }
 
     /**
@@ -347,8 +387,8 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public List<String> listRange(String key, long start, long end) {
-        return null;
+    public List<String> listRange(String key, long start, long end) throws JsonProcessingException {
+        return listRange(key,start,end,String.class);
     }
 
     /**
@@ -360,7 +400,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void listTrim(String key, long start, long end) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.trim);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,start,end));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -371,7 +415,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long listSize(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.size);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -381,8 +430,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param object
      */
     @Override
-    public void listLeftPush(String key, Object object) {
-
+    public void listLeftPush(String key, Object object) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.leftPush);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(object)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -392,8 +445,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param objects
      */
     @Override
-    public void listLeftPushAll(String key, Object... objects) {
-
+    public void listLeftPushAll(String key, Object... objects) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.leftPushAll);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objects)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -403,8 +460,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param object
      */
     @Override
-    public void listRightPush(String key, Object object) {
-
+    public void listRightPush(String key, Object object) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.rightPush);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(object)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -414,8 +475,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param objects
      */
     @Override
-    public void listRightPushAll(String key, Object... objects) {
-
+    public void listRightPushAll(String key, Object... objects) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.rightPushAll);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objects)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -426,8 +491,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param value
      */
     @Override
-    public void listSet(String key, long index, Object value) {
-
+    public void listSet(String key, long index, Object value) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.set);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,index,objectMapper.writeValueAsString(value)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -438,7 +507,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void listRemove(String key, long index) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.remove);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,index));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
     }
 
     /**
@@ -450,7 +523,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String listIndex(String key, long index) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.index);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,index));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return responseBean.getData().toString();
     }
 
     /**
@@ -463,7 +541,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> T listIndex(String key, long index, Class<T> valueType) throws IOException, JsonParseException {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.index);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,index));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return objectMapper.readValue(responseBean.getData().toString(),valueType);
     }
 
     /**
@@ -474,7 +557,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String listLeftPop(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.leftPop);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return responseBean.getData().toString();
     }
 
     /**
@@ -486,7 +574,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> T listLeftPop(String key, Class<T> valueType) throws IOException, JsonParseException {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.leftPop);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return objectMapper.readValue(responseBean.getData().toString(),valueType);
     }
 
     /**
@@ -497,7 +590,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String listRightPop(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.rightPop);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return responseBean.getData().toString();
     }
 
     /**
@@ -511,7 +609,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> T listRightPop(String key, Class<T> valueType) throws IOException, JsonParseException {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ListCmdEnum.rightPop);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.LIST,request);
+        return objectMapper.readValue(responseBean.getData().toString(),valueType);
     }
 
     /**
@@ -522,8 +625,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long setAdd(String key, Object... objects) {
-        return null;
+    public Long setAdd(String key, Object... objects) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.add);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objects)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -534,8 +642,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long setRemove(String key, Object... objects) {
-        return null;
+    public Long setRemove(String key, Object... objects) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.remove);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objects)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -546,7 +659,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long setSize(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.size);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -557,8 +675,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Boolean setIsMember(String key, Object o) {
-        return null;
+    public Boolean setIsMember(String key, Object o) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.isMember);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(o)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -570,7 +693,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> Set<T> setMember(String key, Class<T> valueType) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.members);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return (Set<T>) responseBean.getData();
     }
 
     /**
@@ -581,7 +709,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Set<String> setMember(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.members);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET,request);
+        return (Set<String>) responseBean.getData();
     }
 
     /**
@@ -593,8 +726,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Boolean zSetAddOne(String key, Object value, double score) {
-        return null;
+    public Boolean zSetAddOne(String key, Object value, double score) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.addOne);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(value),score));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -605,8 +743,14 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long zSetAdd(String key, Map<String,Object> tuples) {
-        return null;
+    public Long zSetAdd(String key, Map<String,Object> tuples) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.add);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(tuples)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
+
     }
 
     /**
@@ -617,8 +761,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long zSetRemove(String key, Object... objects) {
-        return null;
+    public Long zSetRemove(String key, Object... objects) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.remove);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objects)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -630,8 +779,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Double zSetIncrementScore(String key, Object value, double delta) {
-        return null;
+    public Double zSetIncrementScore(String key, Object value, double delta) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.incrementScore);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(value),delta));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToDouble(responseBean.getData());
     }
 
     /**
@@ -642,8 +796,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long zSetRank(String key, Object object) {
-        return null;
+    public Long zSetRank(String key, Object object) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.rank);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(object)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -654,8 +813,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Long zSetReverseRank(String key, Object object) {
-        return null;
+    public Long zSetReverseRank(String key, Object object) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.reverseRank);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(object)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -669,7 +833,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> Map<T, Double> zSetRangeWithScores(String key, long start, long end, Class<T> valueType) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.rangeWithScores);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,start,end));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return (Map<T,Double>) responseBean.getData();
     }
 
     /**
@@ -685,7 +854,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> Map<T, Double> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count, Class<T> valueType) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.rangeByScoreWithScores);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,min,max,offset,count));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return (Map<T,Double>) responseBean.getData();
     }
 
     /**
@@ -702,7 +876,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public <T> Map<T, Double> zSetReverseRangeByScoreWithScores(String key, double min, double max, long offset, long count, Class<T> valueType) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.reverseRangeByScoreWithScores);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,min,max,offset,count));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return (Map<T,Double>) responseBean.getData();
     }
 
     /**
@@ -715,7 +894,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long zSetCount(String key, double min, double max) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.count);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,min,max));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -726,7 +910,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long zSetCard(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.zCard);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -737,8 +926,13 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @return
      */
     @Override
-    public Double zSetScore(String key, Object object) {
-        return null;
+    public Double zSetScore(String key, Object object) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.score);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(objectMapper)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToDouble(responseBean.getData());
     }
 
     /**
@@ -751,7 +945,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long zSetRemoveRange(String key, long start, long end) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.removeRange);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,start,end));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -764,7 +963,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long zSetRemoveByScore(String key, double min, double max) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(ZSetCmdEnum.removeRangeByScore);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,min,max));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.ZSET,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -775,7 +979,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void stringSet(String key, String value) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.set);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,value));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
     }
 
     /**
@@ -788,7 +996,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void stringSet(String key, String value, long timeout, TimeUnit unit) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setEx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,value,timeout,unit));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
     }
 
     /**
@@ -800,7 +1012,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Boolean stringSetIfAbsent(String key, String value) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setNx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,value));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -814,7 +1031,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Boolean stringSetIfAbsent(String key, String value, long timeout, TimeUnit unit) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setNxEx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,value,timeout,unit));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -824,7 +1046,11 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public void stringMultiSet(Map<String, String> map) {
-
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiSet);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
     }
 
     /**
@@ -836,7 +1062,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Boolean stringMultiSetIfAbsent(Map<String, String> map) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiSetNx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
     /**
@@ -847,8 +1078,14 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String stringGet(String key) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.get);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return responseBean.getData().toString();
     }
+
 
     /**
      * Get multiple {@code keys}. Values are returned in the order of the requested keys.
@@ -858,7 +1095,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public List<String> stringMultiGet(String... keys) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiGet);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(keys));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return (List<String>) responseBean.getData();
     }
 
     /**
@@ -870,7 +1112,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long stringIncrement(String key, long delta) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.increment);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,delta));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
     /**
@@ -882,7 +1129,12 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public Long stringDecrement(String key, long delta) {
-        return null;
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.decrement);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,delta));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING,request);
+        return ObjectUtils.convertToLong(responseBean.getData());
     }
 
 

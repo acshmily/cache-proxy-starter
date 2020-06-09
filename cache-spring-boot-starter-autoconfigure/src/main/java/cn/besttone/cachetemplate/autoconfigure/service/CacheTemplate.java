@@ -1,5 +1,6 @@
 package cn.besttone.cachetemplate.autoconfigure.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import okhttp3.MediaType;
 import org.springframework.boot.json.JsonParseException;
 
@@ -113,7 +114,7 @@ public interface CacheTemplate {
      * @param hashKeys
      * @return
      */
-    List<String> hashMultiGet(String key,String ...hashKeys);
+    List<String> hashMultiGet(String key,String ...hashKeys) throws JsonProcessingException;
 
     /**
      * 对hash值进行加法运算
@@ -137,14 +138,14 @@ public interface CacheTemplate {
      * @param hashKey
      * @param value
      */
-    void hashPut(String key,String hashKey,Object value);
+    void hashPut(String key,String hashKey,Object value) throws JsonProcessingException;
 
     /**
      * 对指定key进行批量操作
      * @param key
      * @param map
      */
-    void hashPutAll(String key, Map<String,Object> map);
+    void hashPutAll(String key, Map<String,Object> map) throws JsonProcessingException;
 
     /**
      * 根据Key获取所有Hash值并序列化返回
@@ -152,14 +153,14 @@ public interface CacheTemplate {
      * @param valueType
      * @return
      */
-    <T> Map<String,T> hashEntries(String key,Class<T> valueType);
+    <T> Map<String,T> hashEntries(String key,Class<T> valueType) throws JsonProcessingException;
 
     /**
      * 根据key获取所有Hash值
      * @param key
      * @return
      */
-    Map<String,String> hashEntries(String key);
+    Map<String,String> hashEntries(String key) throws JsonProcessingException;
 
     /**
      * 获取list内范围值，并反序列化返回
@@ -169,7 +170,7 @@ public interface CacheTemplate {
      * @param valueType
      * @return
      */
-    <T> List<T> listRange(String key, long start, long end,Class<T> valueType);
+    <T> List<T> listRange(String key, long start, long end,Class<T> valueType) throws JsonProcessingException;
 
     /**
      * 获取list内范围值，并返回
@@ -178,7 +179,7 @@ public interface CacheTemplate {
      * @param end
      * @return
      */
-    List<String> listRange(String key,long start, long end);
+    List<String> listRange(String key,long start, long end) throws JsonProcessingException;
 
     /**
      * 删除list首尾，只保留 [start, end] 之间的值
@@ -200,28 +201,28 @@ public interface CacheTemplate {
      * @param key
      * @param object
      */
-    void listLeftPush(String key,Object object);
+    void listLeftPush(String key,Object object) throws JsonProcessingException;
 
     /**
      * 向左批量push
      * @param key
      * @param objects
      */
-    void listLeftPushAll(String key,Object ...objects);
+    void listLeftPushAll(String key,Object ...objects) throws JsonProcessingException;
 
     /**
      * 向右push
      * @param key
      * @param object
      */
-    void listRightPush(String key,Object object);
+    void listRightPush(String key,Object object) throws JsonProcessingException;
 
     /**
      * 批量向右push
      * @param key
      * @param objects
      */
-    void listRightPushAll(String key,Object ...objects);
+    void listRightPushAll(String key,Object ...objects) throws JsonProcessingException;
 
     /**
      * 指定插入在指定索引
@@ -229,7 +230,7 @@ public interface CacheTemplate {
      * @param index
      * @param value
      */
-    void listSet(String key,long index, Object value);
+    void listSet(String key,long index, Object value) throws JsonProcessingException;
 
     /**
      * 删除list上的指定索引
@@ -295,7 +296,7 @@ public interface CacheTemplate {
      * @param objects
      * @return
      */
-    Long setAdd(String key,Object ...objects);
+    Long setAdd(String key,Object ...objects) throws JsonProcessingException;
 
     /**
      * Remove given {@code objects} from set at {@code key} and return the number of removed elements.
@@ -303,7 +304,7 @@ public interface CacheTemplate {
      * @param objects
      * @return
      */
-    Long setRemove(String key,Object ...objects);
+    Long setRemove(String key,Object ...objects) throws JsonProcessingException;
 
     /**
      * Get size of set at {@code key}.
@@ -318,7 +319,7 @@ public interface CacheTemplate {
      * @param o
      * @return
      */
-    Boolean setIsMember(String key,Object o);
+    Boolean setIsMember(String key,Object o) throws JsonProcessingException;
 
     /**
      * 根据key获取指定Set，并序列化返回
@@ -342,7 +343,7 @@ public interface CacheTemplate {
      * @param score
      * @return
      */
-    Boolean zSetAddOne(String key, Object value, double score);
+    Boolean zSetAddOne(String key, Object value, double score) throws JsonProcessingException;
 
     /**
      * Add {@code tuples} to a sorted set at {@code key}, or update its {@code score} if it already exists.
@@ -350,7 +351,7 @@ public interface CacheTemplate {
      * @param tuples
      * @return
      */
-    Long zSetAdd(String key, Map<String,Object> tuples);
+    Long zSetAdd(String key, Map<String,Object> tuples) throws JsonProcessingException;
 
     /**
      * Remove {@code values} from sorted set. Return number of removed elements.
@@ -358,7 +359,7 @@ public interface CacheTemplate {
      * @param objects
      * @return
      */
-    Long zSetRemove(String key,Object ...objects);
+    Long zSetRemove(String key,Object ...objects) throws JsonProcessingException;
 
     /**
      * Increment the score of element with {@code value} in sorted set by {@code increment}.
@@ -367,7 +368,7 @@ public interface CacheTemplate {
      * @param delta
      * @return
      */
-    Double zSetIncrementScore(String key,Object value,double delta);
+    Double zSetIncrementScore(String key,Object value,double delta) throws JsonProcessingException;
 
     /**
      * Determine the index of element with {@code value} in a sorted set.
@@ -375,7 +376,7 @@ public interface CacheTemplate {
      * @param object
      * @return
      */
-    Long zSetRank(String key,Object object);
+    Long zSetRank(String key,Object object) throws JsonProcessingException;
 
     /**
      * Determine the index of element with {@code value} in a sorted set when scored high to low.
@@ -383,7 +384,7 @@ public interface CacheTemplate {
      * @param object
      * @return
      */
-    Long zSetReverseRank(String key,Object object);
+    Long zSetReverseRank(String key,Object object) throws JsonProcessingException;
 
     /**
      * Get set of  between {@code start} and {@code end} from sorted set.
@@ -443,7 +444,7 @@ public interface CacheTemplate {
      * @param object
      * @return
      */
-    Double zSetScore(String key,Object object);
+    Double zSetScore(String key,Object object) throws JsonProcessingException;
 
     /**
      * Remove elements in range between {@code start} and {@code end} from sorted set with {@code key}.
