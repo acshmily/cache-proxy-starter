@@ -1,6 +1,7 @@
 package cn.besttone.test;
 
 import cn.besttone.cachetemplate.autoconfigure.service.CacheTemplate;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,5 +26,8 @@ public class HelloController {
     }
     @Resource
     private CacheTemplate cacheTemplate;
+
+    @Resource
+    private ObjectMapper objectMapper;
 
 }

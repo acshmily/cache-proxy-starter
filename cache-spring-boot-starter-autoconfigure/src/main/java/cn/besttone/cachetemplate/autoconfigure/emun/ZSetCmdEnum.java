@@ -7,6 +7,6 @@ package cn.besttone.cachetemplate.autoconfigure.emun;
  * @ModifyBy:
  **/
 public enum ZSetCmdEnum implements CacheTemplateCmd {
-    addOne,add,remove,incrementScore,rank,reverseRank,rangeWithScores,rangeByScoreWithScores,reverseRangeByScoreWithScores,
+    addOne,add,remove,incrementScore,rank,reverseRank,rangeWithScores,reverseRangeWithScores,rangeByScoreWithScores,reverseRangeByScoreWithScores,
     count,zCard,score,removeRange,removeRangeByScore
 }

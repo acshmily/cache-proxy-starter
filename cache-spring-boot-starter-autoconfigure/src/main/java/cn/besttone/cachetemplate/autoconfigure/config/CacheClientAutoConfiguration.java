@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +31,7 @@ import java.util.concurrent.*;
 @Configuration
 @EnableConfigurationProperties(CacheClientProperties.class)
 @Slf4j
+@AutoConfigureAfter(JacksonAutoConfiguration.class)
 public class CacheClientAutoConfiguration {
     /**
      * 创建连接池
@@ -109,7 +112,7 @@ public class CacheClientAutoConfiguration {
 
         ObjectMapper objectMapper = new ObjectMapper();
         // 转换为格式化的json
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        //objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         // 如果json中有新增的字段并且是实体类类中不存在的，不报错
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
