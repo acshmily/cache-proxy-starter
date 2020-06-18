@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -63,7 +64,9 @@ public class CacheTemplateStringTest {
 
     @Test
     void stringMultiGet() throws Exception {
-        cacheTemplate.stringMultiGet("1", "2", "3", "4").stream().forEach(System.out::println);
+       // cacheTemplate.stringMultiGet("1", "2", "3", "4");
+        List<String> temp =  cacheTemplate.stringMultiGet("1", "2", "3", "4");
+        System.out.println(temp);
     }
 
     @Test

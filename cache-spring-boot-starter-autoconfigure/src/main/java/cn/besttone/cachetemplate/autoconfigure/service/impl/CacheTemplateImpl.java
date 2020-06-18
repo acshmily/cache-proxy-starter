@@ -1224,6 +1224,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     @Override
     public <T> T convertObject(Object object, Class<T> valueType) throws JsonProcessingException {
+        if(object == null){
+            return null;
+        }
         return objectMapper.readValue(object.toString(), valueType);
     }
 
