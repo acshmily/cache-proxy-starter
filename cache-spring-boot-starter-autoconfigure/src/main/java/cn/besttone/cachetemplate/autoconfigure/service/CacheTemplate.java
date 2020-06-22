@@ -621,6 +621,14 @@ public interface CacheTemplate {
      * @return
      */
     <T> T convertObject(Object object, Class<T> valueType) throws JsonProcessingException;
+
+    /**
+     * 对象转String
+     * @param object
+     * @return
+     */
+    String convertString(Object object) throws JsonProcessingException;
+
 }
 
 

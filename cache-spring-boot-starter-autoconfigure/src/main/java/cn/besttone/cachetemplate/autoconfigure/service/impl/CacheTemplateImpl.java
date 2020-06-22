@@ -1230,4 +1230,17 @@ public class CacheTemplateImpl implements CacheTemplate {
         return objectMapper.readValue(object.toString(), valueType);
     }
 
+    /**
+     * 对象转String
+     *
+     * @param object
+     * @return
+     */
+    @Override
+    public String convertString(Object object) throws JsonProcessingException {
+        if(object == null){
+            return null;
+        }
+        return objectMapper.writeValueAsString(object);
+    }
 }

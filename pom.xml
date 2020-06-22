@@ -16,7 +16,7 @@
 	</parent>
 	<groupId>cn.besttone</groupId>
 	<artifactId>cache-springboot-starter</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>cache-springboot-starter</name>
 	<description>客户端Springboot插件</description>
 
