@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 public interface CacheTemplate {
     MediaType JSON_TYPE = MediaType.parse("application/json");
 
-    String helloWord();
 
     /**
      * 指定键过期
@@ -532,6 +531,13 @@ public interface CacheTemplate {
     void stringSet(String key, String value);
 
     /**
+     * Set {@code value} for {@code key}.
+     * @param key
+     * @param value
+     */
+    void stringSet(String key,Object value) throws JsonProcessingException;
+
+    /**
      * Set the {@code value} and expiration {@code timeout} for {@code key}.
      *
      * @param key
@@ -542,6 +548,14 @@ public interface CacheTemplate {
     void stringSet(String key, String value, long timeout, TimeUnit unit);
 
     /**
+     * Set the {@code value} and expiration {@code timeout} for {@code key}.
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     */
+    void stringSet(String key,Object value,long timeout, TimeUnit unit) throws JsonProcessingException;
+    /**
      * Set {@code key} to hold the string {@code value} if {@code key} is absent.
      *
      * @param key
@@ -549,6 +563,14 @@ public interface CacheTemplate {
      * @return
      */
     Boolean stringSetIfAbsent(String key, String value);
+    /**
+     * Set {@code key} to hold the string {@code value} if {@code key} is absent.
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    Boolean stringSetIfAbsent(String key, Object value) throws JsonProcessingException;
 
     /**
      * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
@@ -562,11 +584,22 @@ public interface CacheTemplate {
     Boolean stringSetIfAbsent(String key, String value, long timeout, TimeUnit unit);
 
     /**
+     * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
+     *
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    Boolean stringSetIfAbsent(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException;
+
+    /**
      * Set multiple keys to multiple values using key-value pairs provided in {@code tuple}.
      *
      * @param map
      */
-    void stringMultiSet(Map<String, String> map);
+    void stringMultiSet(Map<String, Object> map) throws JsonProcessingException;
 
     /**
      * Set multiple keys to multiple values using key-value pairs provided in {@code tuple} only if the provided key does
@@ -575,7 +608,7 @@ public interface CacheTemplate {
      * @param map
      * @return
      */
-    Boolean stringMultiSetIfAbsent(Map<String, String> map);
+    Boolean stringMultiSetIfAbsent(Map<String, Object> map) throws JsonProcessingException;
 
 
     /**
@@ -593,6 +626,13 @@ public interface CacheTemplate {
      * @return
      */
     List<String> stringMultiGet(String... keys);
+    /**
+     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
+     *
+     * @param keys
+     * @return
+     */
+    List<Object> stringMultiGet(Object... keys) throws JsonProcessingException;
 
     /**
      * Increment an integer value stored as string value under {@code key} by {@code delta}.

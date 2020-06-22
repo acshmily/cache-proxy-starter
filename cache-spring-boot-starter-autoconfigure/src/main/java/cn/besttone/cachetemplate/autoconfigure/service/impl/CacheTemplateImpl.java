@@ -47,19 +47,6 @@ public class CacheTemplateImpl implements CacheTemplate {
         this.objectMapper = objectMapper;
     }
 
-    @Override
-    public String helloWord() {
-        Request request = new Request.Builder().url("http://www.baidu.com").build();
-
-        try {
-            Response response = okHttpClient.newCall(request).execute();
-            return response.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "测试存在部分错误";
-    }
-
     /**
      * 指定键过期
      *
@@ -1075,36 +1062,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
-    /**
-     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple}.
-     *
-     * @param map
-     */
-    @Override
-    public void stringMultiSet(Map<String, String> map) {
-        RequestBean request = new RequestBean();
-        request.setCmd(StringCmdEnum.multiSet);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
-        request.setArgs(args);
-        ResponseBean responseBean = call(RequestPath.STRING, request);
-    }
 
-    /**
-     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple} only if the provided key does
-     * not exist.
-     *
-     * @param map
-     * @return
-     */
-    @Override
-    public Boolean stringMultiSetIfAbsent(Map<String, String> map) {
-        RequestBean request = new RequestBean();
-        request.setCmd(StringCmdEnum.multiSetNx);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
-        request.setArgs(args);
-        ResponseBean responseBean = call(RequestPath.STRING, request);
-        return ObjectUtils.convertToBoolean(responseBean.getData());
-    }
 
     /**
      * 默认返回String值
@@ -1172,6 +1130,157 @@ public class CacheTemplateImpl implements CacheTemplate {
         return ObjectUtils.convertToLong(responseBean.getData());
     }
 
+    /**
+     * Set {@code value} for {@code key}.
+     *
+     * @param key
+     * @param value
+     */
+    @Override
+    public void stringSet(String key, Object value) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.set);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+    }
+
+    /**
+     * Set the {@code value} and expiration {@code timeout} for {@code key}.
+     *
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     */
+    @Override
+    public void stringSet(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setEx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value),timeout,unit));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+
+    }
+
+    /**
+     * Set {@code key} to hold the string {@code value} if {@code key} is absent.
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    @Override
+    public Boolean stringSetIfAbsent(String key, Object value) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setNx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value)));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
+
+    }
+
+    /**
+     * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
+     *
+     * @param key
+     * @param value
+     * @param timeout
+     * @param unit
+     * @return
+     */
+    @Override
+    public Boolean stringSetIfAbsent(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.setNxEx);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value),timeout,unit));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
+    }
+
+    /**
+     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple}.
+     *
+     * @param map
+     */
+    @Override
+    public void stringMultiSet(Map<String, Object> map) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiSet);
+        Map<String, Object> result = new HashMap<>(map.size());
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+        }
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(result));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+    }
+
+    /**
+     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple} only if the provided key does
+     * not exist.
+     *
+     * @param map
+     * @return
+     */
+    @Override
+    public Boolean stringMultiSetIfAbsent(Map<String, Object> map) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiSetNx);
+        Map<String, Object> result = new HashMap<>(map.size());
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+        }
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(result));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+        return ObjectUtils.convertToBoolean(responseBean.getData());
+    }
+
+    /**
+     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
+     *
+     * @param keys
+     * @return
+     */
+    @Override
+    public List<Object> stringMultiGet(Object... keys) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.multiSet);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(keys));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+        return objectMapper.readValue(String.valueOf(responseBean.getData()), new TypeReference<List<Object>>() {});
+    }
+
+    @Override
+    public <T> T convertObject(Object object, Class<T> valueType) throws JsonProcessingException {
+        if(object == null){
+            return null;
+        }
+        return objectMapper.readValue(object.toString(), valueType);
+    }
+
+    /**
+     * 对象转String
+     *
+     * @param object
+     * @return
+     */
+    @Override
+    public String convertString(Object object) throws JsonProcessingException {
+        if(object == null){
+            return null;
+        }
+        return objectMapper.writeValueAsString(object);
+    }
+
+
+
+
+
     public OkHttpClient getOkHttpClient() {
         return okHttpClient;
     }
@@ -1222,25 +1331,6 @@ public class CacheTemplateImpl implements CacheTemplate {
         return responseBody;
     }
 
-    @Override
-    public <T> T convertObject(Object object, Class<T> valueType) throws JsonProcessingException {
-        if(object == null){
-            return null;
-        }
-        return objectMapper.readValue(object.toString(), valueType);
-    }
 
-    /**
-     * 对象转String
-     *
-     * @param object
-     * @return
-     */
-    @Override
-    public String convertString(Object object) throws JsonProcessingException {
-        if(object == null){
-            return null;
-        }
-        return objectMapper.writeValueAsString(object);
-    }
+
 }

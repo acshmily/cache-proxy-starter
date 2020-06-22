@@ -49,7 +49,7 @@ public class CacheTemplateStringTest {
 
     @Test
     void stringMultiSetIfAbsent() throws Exception {
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("1", "1");
         map.put("2", "2");
         map.put("3", "3");
