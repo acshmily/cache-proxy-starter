@@ -1225,12 +1225,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void stringMultiSet(Map<String, Object> map) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.multiSet);
-        Map<String, Object> result = new HashMap<>(map.size());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (isPrimitive(entry.getValue())) {
-                result.put(entry.getKey(), entry.getValue());
-            } else {
-                result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            if (!isPrimitive(entry.getValue())) {
+                map.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
             }
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
@@ -1251,13 +1248,11 @@ public class CacheTemplateImpl implements CacheTemplate {
         request.setCmd(StringCmdEnum.multiSetNx);
         Map<String, Object> result = new HashMap<>(map.size());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (isPrimitive(entry.getValue())) {
-                result.put(entry.getKey(), entry.getValue());
-            } else {
-                result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            if (!isPrimitive(entry.getValue())) {
+                map.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
             }
         }
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(result));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
         return ObjectUtils.convertToBoolean(responseBean.getData());
@@ -1287,7 +1282,7 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     private boolean isPrimitive(Object obj) {
         try {
-            return (obj instanceof String) || ((Class<?>) obj.getClass().getField("TYPE").get(null)).isPrimitive() ;
+            return (obj instanceof String) || ((Class<?>) obj.getClass().getField("TYPE").get(null)).isPrimitive();
         } catch (Exception e) {
             return false;
         }
