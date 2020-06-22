@@ -620,6 +620,13 @@ public interface CacheTemplate {
     String stringGet(String key);
 
     /**
+     *
+     * @param key
+     * @param valueType
+     * @param <T>
+     */
+    <T> T stringGet(String key,Class<T> valueType) throws JsonProcessingException;
+    /**
      * Get multiple {@code keys}. Values are returned in the order of the requested keys.
      *
      * @param keys

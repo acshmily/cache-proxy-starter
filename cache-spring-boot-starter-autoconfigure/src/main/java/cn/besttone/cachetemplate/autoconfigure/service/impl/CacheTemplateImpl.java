@@ -1081,6 +1081,21 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
+     * 根据key查询并反序列化
+     * @param key
+     * @param valueType
+     * @param <T>
+     * @return
+     */
+    public <T> T stringGet(String key,Class<T> valueType) throws JsonProcessingException {
+        RequestBean request = new RequestBean();
+        request.setCmd(StringCmdEnum.get);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.STRING, request);
+        return objectMapper.readValue(responseBean.getData().toString(),valueType);
+    }
+    /**
      * Get multiple {@code keys}. Values are returned in the order of the requested keys.
      *
      * @param keys
