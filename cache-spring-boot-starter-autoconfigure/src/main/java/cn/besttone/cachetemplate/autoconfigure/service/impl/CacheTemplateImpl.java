@@ -697,7 +697,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.SET, request);
-        return  ((List<T>) responseBean.getData()).stream().collect(Collectors.toSet());
+        return ((List<T>) responseBean.getData()).stream().collect(Collectors.toSet());
     }
 
     /**
@@ -713,7 +713,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.SET, request);
-        return  ((List<String>) responseBean.getData()).stream().collect(Collectors.toSet());
+        return ((List<String>) responseBean.getData()).stream().collect(Collectors.toSet());
     }
 
     /**
@@ -1063,7 +1063,6 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
 
-
     /**
      * 默认返回String值
      *
@@ -1082,19 +1081,21 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key查询并反序列化
+     *
      * @param key
      * @param valueType
      * @param <T>
      * @return
      */
-    public <T> T stringGet(String key,Class<T> valueType) throws JsonProcessingException {
+    public <T> T stringGet(String key, Class<T> valueType) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.get);
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
-        return objectMapper.readValue(responseBean.getData().toString(),valueType);
+        return objectMapper.readValue(responseBean.getData().toString(), valueType);
     }
+
     /**
      * Get multiple {@code keys}. Values are returned in the order of the requested keys.
      *
@@ -1155,7 +1156,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void stringSet(String key, Object value) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.set);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
     }
@@ -1172,7 +1173,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void stringSet(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.setEx);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value),timeout,unit));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value), timeout, unit));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
 
@@ -1189,7 +1190,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Boolean stringSetIfAbsent(String key, Object value) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.setNx);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
         return ObjectUtils.convertToBoolean(responseBean.getData());
@@ -1209,7 +1210,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Boolean stringSetIfAbsent(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.setNxEx);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value),timeout,unit));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value), timeout, unit));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
         return ObjectUtils.convertToBoolean(responseBean.getData());
@@ -1226,9 +1227,13 @@ public class CacheTemplateImpl implements CacheTemplate {
         request.setCmd(StringCmdEnum.multiSet);
         Map<String, Object> result = new HashMap<>(map.size());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            if (isPrimitive(entry.getValue())) {
+                result.put(entry.getKey(), entry.getValue());
+            } else {
+                result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            }
         }
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(result));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(map));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
     }
@@ -1246,7 +1251,11 @@ public class CacheTemplateImpl implements CacheTemplate {
         request.setCmd(StringCmdEnum.multiSetNx);
         Map<String, Object> result = new HashMap<>(map.size());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            if (isPrimitive(entry.getValue())) {
+                result.put(entry.getKey(), entry.getValue());
+            } else {
+                result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            }
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(result));
         request.setArgs(args);
@@ -1254,25 +1263,9 @@ public class CacheTemplateImpl implements CacheTemplate {
         return ObjectUtils.convertToBoolean(responseBean.getData());
     }
 
-    /**
-     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
-     *
-     * @param keys
-     * @return
-     */
-    @Override
-    public List<Object> stringMultiGet(Object... keys) throws JsonProcessingException {
-        RequestBean request = new RequestBean();
-        request.setCmd(StringCmdEnum.multiSet);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(keys));
-        request.setArgs(args);
-        ResponseBean responseBean = call(RequestPath.STRING, request);
-        return objectMapper.readValue(String.valueOf(responseBean.getData()), new TypeReference<List<Object>>() {});
-    }
-
     @Override
     public <T> T convertObject(Object object, Class<T> valueType) throws JsonProcessingException {
-        if(object == null){
+        if (object == null) {
             return null;
         }
         return objectMapper.readValue(object.toString(), valueType);
@@ -1286,14 +1279,19 @@ public class CacheTemplateImpl implements CacheTemplate {
      */
     @Override
     public String convertString(Object object) throws JsonProcessingException {
-        if(object == null){
+        if (object == null) {
             return null;
         }
         return objectMapper.writeValueAsString(object);
     }
 
-
-
+    private boolean isPrimitive(Object obj) {
+        try {
+            return (obj instanceof String) || ((Class<?>) obj.getClass().getField("TYPE").get(null)).isPrimitive() ;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
 
     public OkHttpClient getOkHttpClient() {
@@ -1345,7 +1343,6 @@ public class CacheTemplateImpl implements CacheTemplate {
         }
         return responseBody;
     }
-
 
 
 }

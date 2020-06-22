@@ -532,10 +532,11 @@ public interface CacheTemplate {
 
     /**
      * Set {@code value} for {@code key}.
+     *
      * @param key
      * @param value
      */
-    void stringSet(String key,Object value) throws JsonProcessingException;
+    void stringSet(String key, Object value) throws JsonProcessingException;
 
     /**
      * Set the {@code value} and expiration {@code timeout} for {@code key}.
@@ -549,12 +550,14 @@ public interface CacheTemplate {
 
     /**
      * Set the {@code value} and expiration {@code timeout} for {@code key}.
+     *
      * @param key
      * @param value
      * @param timeout
      * @param unit
      */
-    void stringSet(String key,Object value,long timeout, TimeUnit unit) throws JsonProcessingException;
+    void stringSet(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException;
+
     /**
      * Set {@code key} to hold the string {@code value} if {@code key} is absent.
      *
@@ -563,6 +566,7 @@ public interface CacheTemplate {
      * @return
      */
     Boolean stringSetIfAbsent(String key, String value);
+
     /**
      * Set {@code key} to hold the string {@code value} if {@code key} is absent.
      *
@@ -620,12 +624,12 @@ public interface CacheTemplate {
     String stringGet(String key);
 
     /**
-     *
      * @param key
      * @param valueType
      * @param <T>
      */
-    <T> T stringGet(String key,Class<T> valueType) throws JsonProcessingException;
+    <T> T stringGet(String key, Class<T> valueType) throws JsonProcessingException;
+
     /**
      * Get multiple {@code keys}. Values are returned in the order of the requested keys.
      *
@@ -633,13 +637,6 @@ public interface CacheTemplate {
      * @return
      */
     List<String> stringMultiGet(String... keys);
-    /**
-     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
-     *
-     * @param keys
-     * @return
-     */
-    List<Object> stringMultiGet(Object... keys) throws JsonProcessingException;
 
     /**
      * Increment an integer value stored as string value under {@code key} by {@code delta}.
@@ -671,6 +668,7 @@ public interface CacheTemplate {
 
     /**
      * 对象转String
+     *
      * @param object
      * @return
      */
