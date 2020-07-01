@@ -195,7 +195,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, hashKey));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH, request);
-        return String.valueOf(responseBean.getData());
+        return ObjectUtils.convertToString(responseBean.getData());
     }
 
     /**
@@ -517,7 +517,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, index));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return responseBean.getData().toString();
+        return ObjectUtils.convertToString(responseBean.getData());
     }
 
     /**
@@ -535,7 +535,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, index));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return objectMapper.readValue(responseBean.getData().toString(), valueType);
+        return convertObject(responseBean.getData(), valueType);
     }
 
     /**
@@ -551,7 +551,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return responseBean.getData().toString();
+        return ObjectUtils.convertToString(responseBean.getData());
     }
 
     /**
@@ -568,7 +568,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return objectMapper.readValue(responseBean.getData().toString(), valueType);
+        return convertObject(responseBean.getData(), valueType);
     }
 
     /**
@@ -584,7 +584,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return responseBean.getData().toString();
+        return ObjectUtils.convertToString(responseBean.getData());
     }
 
     /**
@@ -603,7 +603,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
-        return objectMapper.readValue(responseBean.getData().toString(), valueType);
+        return convertObject(responseBean.getData(), valueType);
     }
 
     /**
@@ -1076,7 +1076,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
-        return responseBean.getData().toString();
+        return ObjectUtils.convertToString(responseBean.getData());
     }
 
     /**
@@ -1093,7 +1093,7 @@ public class CacheTemplateImpl implements CacheTemplate {
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.STRING, request);
-        return objectMapper.readValue(responseBean.getData().toString(), valueType);
+        return convertObject(responseBean.getData(), valueType);
     }
 
     /**

@@ -78,24 +78,24 @@ public class CacheTemplateListTest {
     void listIndex() throws Exception {
         String a = cacheTemplate.listIndex("list", 3);
         System.out.println(a);
-        //Role b = cacheTemplate.listIndex("list", 0, Role.class);
-        //System.out.println(b);
+        Role b = cacheTemplate.listIndex("list", 0, Role.class);
+        System.out.println(b);
+        Object c = cacheTemplate.listIndex("list", 6, Object.class);
+        System.out.println(c);
     }
 
     @Test
     void listLeftPop() throws Exception {
         Role a = cacheTemplate.listLeftPop("list", Role.class);
         System.out.println(a);
-        //String b = cacheTemplate.listLeftPop("list");
-        //System.out.println(b);
+        System.out.println(cacheTemplate.listLeftPop("list1"));
     }
 
     @Test
     void listRightPop() throws Exception {
         String a = cacheTemplate.listRightPop("list");
         System.out.println(a);
-        //User b = cacheTemplate.listRightPop("list", User.class);
-        //System.out.println(b);
+        System.out.println(cacheTemplate.listLeftPop("list1"));
     }
 
 }

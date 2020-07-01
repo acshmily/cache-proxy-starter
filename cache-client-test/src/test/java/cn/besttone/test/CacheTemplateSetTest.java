@@ -60,6 +60,7 @@ public class CacheTemplateSetTest {
         System.out.println(set);
         Set<Object> set1 = cacheTemplate.setMember("set", Object.class);
         System.out.println(set1);
+        System.out.println(cacheTemplate.setMember("set1"));
     }
 
 }

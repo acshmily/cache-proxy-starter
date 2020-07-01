@@ -103,7 +103,7 @@ public class CacheTemplateStringTest {
     @Test
     void stringMultiGet() throws Exception {
        // cacheTemplate.stringMultiGet("1", "2", "3", "4");
-        List<String> temp =  cacheTemplate.stringMultiGet("1", "2", "3", "4");
+        List<String> temp =  cacheTemplate.stringMultiGet("11", "22", "32", "41");
         System.out.println(temp);
     }
 

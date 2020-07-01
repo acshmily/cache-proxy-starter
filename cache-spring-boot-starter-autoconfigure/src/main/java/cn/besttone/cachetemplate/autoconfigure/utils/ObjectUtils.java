@@ -45,6 +45,18 @@ public class ObjectUtils {
     }
 
     /**
+     * object 转 string
+     *
+     * @param o
+     * @return
+     */
+    public static String convertToString(Object o) {
+        if (isNull(o))
+            return null;
+        return String.valueOf(o);
+    }
+
+    /**
      * 判断是否为null
      *
      * @param obj
