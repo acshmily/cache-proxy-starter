@@ -1087,6 +1087,7 @@ public class CacheTemplateImpl implements CacheTemplate {
      * @param <T>
      * @return
      */
+    @Override
     public <T> T stringGet(String key, Class<T> valueType) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(StringCmdEnum.get);
