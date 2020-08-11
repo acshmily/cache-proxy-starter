@@ -1,7 +1,7 @@
 haobai:
   cache:
-    user-name: test
-    password: test
+    user-name: ai-order
+    password: a46588ea34db
     url: http://127.0.0.1:8080
 #    url: http://192.168.29.109:8090
 server:

@@ -49,7 +49,7 @@ public class CacheTemplateSetTest {
     void setIsMember() throws Exception {
         Role role = new Role();
         role.setRoleName("admin");
-        role.setRole("admin1");
+        role.setRole("admin");
         System.out.println(cacheTemplate.setIsMember("set", "3"));
         System.out.println(cacheTemplate.setIsMember("set", role));
     }
@@ -57,7 +57,7 @@ public class CacheTemplateSetTest {
     @Test
     void setMember() throws Exception {
         Set<String> set = cacheTemplate.setMember("set");
-        System.out.println(set);
+        set.stream().forEach(System.out::println);
         Set<Object> set1 = cacheTemplate.setMember("set", Object.class);
         System.out.println(set1);
         System.out.println(cacheTemplate.setMember("set1"));

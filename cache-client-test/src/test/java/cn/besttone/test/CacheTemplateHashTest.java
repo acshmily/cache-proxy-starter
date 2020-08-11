@@ -88,7 +88,7 @@ public class CacheTemplateHashTest {
 
     @Test
     void hashEntries() throws Exception {
-        Map<String, Object> map = cacheTemplate.hashEntries("hash1", Object.class);
+        Map<String, Object> map = cacheTemplate.hashEntries("hash", Object.class);
         User user = cacheTemplate.convertObject(map.get("user"), User.class);
         Role role = cacheTemplate.convertObject(map.get("role"), Role.class);
     }

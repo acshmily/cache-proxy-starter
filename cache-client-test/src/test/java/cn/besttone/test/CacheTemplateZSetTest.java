@@ -50,6 +50,7 @@ public class CacheTemplateZSetTest {
         map.put("7", "7");
         map.put("5", "5");
         map.put("25", "25");
+        map.put("1234qwer", "12313");
         System.out.println(cacheTemplate.zSetAdd("zset", map));
     }
 

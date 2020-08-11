@@ -282,7 +282,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void hashPut(String key, String hashKey, Object value) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.put);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, hashKey, objectMapper.writeValueAsString(value)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, hashKey, isPrimitive(value) ? value : objectMapper.writeValueAsString(value)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH, request);
     }
@@ -297,13 +297,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void hashPutAll(String key, Map<String, Object> map) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(HashCmdEnum.putAll);
-        Map<String, Object> result = new HashMap<>(map.size());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            result.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            if (!isPrimitive(entry.getValue())) {
+                map.put(entry.getKey(), objectMapper.writeValueAsString(entry.getValue()));
+            }
         }
-        // LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,objectMapper.writeValueAsString(map)));
-//        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key,map));
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, result));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, map));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.HASH, request);
     }
@@ -412,7 +411,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void listLeftPush(String key, Object object) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ListCmdEnum.leftPush);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(object)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(object) ? object : objectMapper.writeValueAsString(object)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
     }
@@ -427,10 +426,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void listLeftPushAll(String key, Object... objects) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ListCmdEnum.leftPushAll);
-        final List<String> collect = new ArrayList<>(objects.length);
+        final List<Object> collect = new ArrayList<>(objects.length);
         for (Object value : objects) {
-            String s = objectMapper.writeValueAsString(value);
-            collect.add(s);
+            if (!isPrimitive(value)) {
+                value = objectMapper.writeValueAsString(value);
+            }
+            collect.add(value);
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, collect));
         request.setArgs(args);
@@ -447,7 +448,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void listRightPush(String key, Object object) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ListCmdEnum.rightPush);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(object)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(object) ? object : objectMapper.writeValueAsString(object)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
     }
@@ -462,10 +463,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void listRightPushAll(String key, Object... objects) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ListCmdEnum.rightPushAll);
-        final List<String> collect = new ArrayList<>(objects.length);
+        final List<Object> collect = new ArrayList<>(objects.length);
         for (Object value : objects) {
-            String s = objectMapper.writeValueAsString(value);
-            collect.add(s);
+            if (!isPrimitive(value)) {
+                value = objectMapper.writeValueAsString(value);
+            }
+            collect.add(value);
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, collect));
         request.setArgs(args);
@@ -483,7 +486,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public void listSet(String key, long index, Object value) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ListCmdEnum.set);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, index, objectMapper.writeValueAsString(value)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, index, isPrimitive(value) ? value : objectMapper.writeValueAsString(value)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.LIST, request);
     }
@@ -617,10 +620,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Long setAdd(String key, Object... objects) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(SetCmdEnum.add);
-        final List<String> collect = new ArrayList<>(objects.length);
+        final List<Object> collect = new ArrayList<>(objects.length);
         for (Object value : objects) {
-            String s = objectMapper.writeValueAsString(value);
-            collect.add(s);
+            if (!isPrimitive(value)) {
+                value = objectMapper.writeValueAsString(value);
+            }
+            collect.add(value);
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, collect));
         request.setArgs(args);
@@ -639,10 +644,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Long setRemove(String key, Object... objects) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(SetCmdEnum.remove);
-        final List<String> collect = new ArrayList<>(objects.length);
+        final List<Object> collect = new ArrayList<>(objects.length);
         for (Object value : objects) {
-            String s = objectMapper.writeValueAsString(value);
-            collect.add(s);
+            if (!isPrimitive(value)) {
+                value = objectMapper.writeValueAsString(value);
+            }
+            collect.add(value);
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, collect));
         request.setArgs(args);
@@ -677,7 +684,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Boolean setIsMember(String key, Object o) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(SetCmdEnum.isMember);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(o)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(o) ? o : objectMapper.writeValueAsString(o)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.SET, request);
         return ObjectUtils.convertToBoolean(responseBean.getData());
@@ -728,7 +735,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Boolean zSetAddOne(String key, Object value, double score) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.addOne);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value), String.valueOf(score)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value), String.valueOf(score)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.ZSET, request);
         return ObjectUtils.convertToBoolean(responseBean.getData());
@@ -763,10 +770,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Long zSetRemove(String key, Object... objects) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.remove);
-        final List<String> collect = new ArrayList<>(objects.length);
+        final List<Object> collect = new ArrayList<>(objects.length);
         for (Object value : objects) {
-            String s = objectMapper.writeValueAsString(value);
-            collect.add(s);
+            if (!isPrimitive(value)) {
+                value = objectMapper.writeValueAsString(value);
+            }
+            collect.add(value);
         }
         LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, collect));
         request.setArgs(args);
@@ -786,7 +795,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Double zSetIncrementScore(String key, Object value, double delta) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.incrementScore);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(value), String.valueOf(delta)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(value) ? value : objectMapper.writeValueAsString(value), String.valueOf(delta)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.ZSET, request);
         return ObjectUtils.convertToDouble(responseBean.getData());
@@ -803,7 +812,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Long zSetRank(String key, Object object) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.rank);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(object)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(object) ? object : objectMapper.writeValueAsString(object)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.ZSET, request);
         return ObjectUtils.convertToLong(responseBean.getData());
@@ -820,7 +829,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Long zSetReverseRank(String key, Object object) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.reverseRank);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(object)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(object) ? object : objectMapper.writeValueAsString(object)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.ZSET, request);
         return ObjectUtils.convertToLong(responseBean.getData());
@@ -952,7 +961,7 @@ public class CacheTemplateImpl implements CacheTemplate {
     public Double zSetScore(String key, Object object) throws JsonProcessingException {
         RequestBean request = new RequestBean();
         request.setCmd(ZSetCmdEnum.score);
-        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, objectMapper.writeValueAsString(object)));
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key, isPrimitive(object) ? object : objectMapper.writeValueAsString(object)));
         request.setArgs(args);
         ResponseBean responseBean = call(RequestPath.ZSET, request);
         return ObjectUtils.convertToDouble(responseBean.getData());

@@ -41,7 +41,10 @@ public class CacheTemplateListTest {
 
     @Test
     void listLeftPush() throws Exception {
+        Role role = new Role();
+        role.setRoleName("admin");
         cacheTemplate.listLeftPush("list", "asdfgh");
+        cacheTemplate.listLeftPush("list", role);
     }
 
     @Test
@@ -67,6 +70,10 @@ public class CacheTemplateListTest {
     @Test
     void listSet() throws Exception {
         cacheTemplate.listSet("list", 3, "zxc");
+        User user = new User();
+        user.setPassword("0123");
+        user.setUsername("hhh");
+        cacheTemplate.listSet("list", 3, user);
     }
 
     @Test
