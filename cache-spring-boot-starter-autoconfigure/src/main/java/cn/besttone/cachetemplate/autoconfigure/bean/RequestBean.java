@@ -12,8 +12,24 @@ import java.util.List;
  * @Date:Created in 6:02 下午 2020/6/5
  * @ModifyBy:
  **/
-@Data
+
 public class RequestBean {
     private CacheTemplateCmd cmd;
     private LinkedList<Object> args;
+
+    public CacheTemplateCmd getCmd() {
+        return cmd;
+    }
+
+    public void setCmd(CacheTemplateCmd cmd) {
+        this.cmd = cmd;
+    }
+
+    public LinkedList<Object> getArgs() {
+        return args;
+    }
+
+    public void setArgs(LinkedList<Object> args) {
+        this.args = args;
+    }
 }

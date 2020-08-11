@@ -8,11 +8,12 @@ import cn.besttone.cachetemplate.autoconfigure.utils.ObjectUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.json.JsonParseException;
 
 import javax.validation.constraints.NotNull;
@@ -27,7 +28,6 @@ import java.util.stream.Collectors;
  * @Date:Created in 1:51 下午 2020/6/3
  * @ModifyBy:
  **/
-@Slf4j
 public class CacheTemplateImpl implements CacheTemplate {
     private OkHttpClient okHttpClient;
     private String urlPath;
@@ -1348,6 +1348,8 @@ public class CacheTemplateImpl implements CacheTemplate {
         }
         return responseBody;
     }
+
+    private final static Logger log = LoggerFactory.getLogger(CacheTemplateImpl.class);
 
 
 }
