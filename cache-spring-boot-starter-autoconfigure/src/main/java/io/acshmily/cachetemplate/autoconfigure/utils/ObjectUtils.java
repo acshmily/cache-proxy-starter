@@ -10,8 +10,8 @@ public class ObjectUtils {
     /**
      * object 转 long
      *
-     * @param o
-     * @return
+     * @param o o
+     * @return  Long
      */
     public static Long convertToLong(Object o) {
         if (isNull(o))
@@ -23,8 +23,8 @@ public class ObjectUtils {
     /**
      * object 转 boolean
      *
-     * @param o
-     * @return
+     * @param o o
+     * @return  Boolean
      */
     public static Boolean convertToBoolean(Object o) {
         if (isNull(o))
@@ -35,8 +35,8 @@ public class ObjectUtils {
     /**
      * object 转 double
      *
-     * @param o
-     * @return
+     * @param o o
+     * @return Double
      */
     public static Double convertToDouble(Object o) {
         if (isNull(o))
@@ -47,8 +47,8 @@ public class ObjectUtils {
     /**
      * object 转 string
      *
-     * @param o
-     * @return
+     * @param o o
+     * @return String
      */
     public static String convertToString(Object o) {
         if (isNull(o))
@@ -59,8 +59,8 @@ public class ObjectUtils {
     /**
      * 判断是否为null
      *
-     * @param obj
-     * @return
+     * @param obj obj
+     * @return  Boolean
      */
     public static boolean isNull(Object obj) {
         return null == obj || obj.equals(null);

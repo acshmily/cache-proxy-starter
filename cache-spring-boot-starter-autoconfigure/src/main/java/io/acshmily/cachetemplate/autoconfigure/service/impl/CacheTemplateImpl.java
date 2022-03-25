@@ -49,10 +49,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定键过期
-     *
-     * @param key
-     * @param timeout
-     * @param timeUnit
+     * @param key   key
+     * @param timeout   timeout
+     * @param timeUnit  timeUnit
      */
     @Override
     public void expire(@NotNull String key, @NotNull long timeout, @NotNull TimeUnit timeUnit) {
@@ -67,9 +66,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定键在某个时间戳过期
-     *
-     * @param key
-     * @param timestamp
+     * @param key   key
+     * @param timestamp timestamp
      */
     @Override
     public void expireAt(@NotNull String key, @NotNull long timestamp) {
@@ -83,10 +81,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取过期时间
-     *
-     * @param key
-     * @param timeUnit 时间(秒) 返回0代表为永久有效
-     * @return
+     * @param key   key
+     * @param timeUnit  timeUnit
+     * @return  Long
      */
     @Override
     public Long getExpire(@NotNull String key, TimeUnit timeUnit) {
@@ -100,8 +97,7 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key删除缓存
-     *
-     * @param keys
+     * @param keys  keys
      */
     @Override
     public void delete(String... keys) {
@@ -114,9 +110,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 判断key是否存在
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  Boolean
      */
     @Override
     public Boolean hasKey(@NotNull String key) {
@@ -130,9 +125,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 删除指定key里的item
-     *
-     * @param key
-     * @param hashKeys
+     * @param key   key
+     * @param hashKeys  hashKeys
      */
     @Override
     public void deleteHashKeys(@NotNull String key, String... hashKeys) {
@@ -146,10 +140,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 判断key内是否存在指定hashKey
-     *
-     * @param key
-     * @param hashKey
-     * @return
+     * @param key   key
+     * @param hashKey   hashKey
+     * @return  Boolean
      */
     @Override
     public Boolean hasHashKey(@NotNull String key, String hashKey) {
@@ -163,13 +156,13 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据keykey及hashKey获取值并反序列化返回
-     *
-     * @param key
-     * @param hashKey
-     * @param valueType
-     * @return
-     * @throws IOException
-     * @throws JsonParseException
+     * @param key   key
+     * @param hashKey   hashKey
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
+     * @throws IOException  IOException
+     * @throws JsonParseException   JsonParseException
      */
     @Override
     public <T> T hashGet(@NotNull String key, String hashKey, Class<T> valueType) throws IOException, JsonParseException {
@@ -183,10 +176,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取key及hashKey获取值并直接返回
-     *
-     * @param key
-     * @param hashKey
-     * @return
+     * @param key   key
+     * @param hashKey   hashKey
+     * @return  String
      */
     @Override
     public String hashGet(@NotNull String key, String hashKey) {
@@ -200,13 +192,13 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key及hashKeys获取值返回并且反序列化
-     *
-     * @param key
-     * @param valueType
-     * @param hashKeys
-     * @return
-     * @throws IOException
-     * @throws JsonParseException
+     * @param key   key
+     * @param valueType valueType
+     * @param hashKeys  hashKeys
+     * @param <T>   T
+     * @return  T
+     * @throws IOException  IOException
+     * @throws JsonParseException   JsonParseException
      */
     @Override
     public <T> List<T> hashMultiGet(@NotNull String key, @NotNull Class<T> valueType, String... hashKeys) throws IOException, JsonParseException {
@@ -221,10 +213,10 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key及hashKeys返回数组
-     *
-     * @param key
-     * @param hashKeys
-     * @return
+     * @param key   key
+     * @param hashKeys  hashKeys
+     * @return  List
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public List<Object> hashMultiGet(@NotNull String key, String... hashKeys) throws JsonProcessingException {
@@ -239,11 +231,10 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 对hash值进行加法运算
-     *
-     * @param key
-     * @param hashKey
-     * @param delta
-     * @return
+     * @param key   key
+     * @param hashKey   hashKey
+     * @param delta delta
+     * @return  Long
      */
     @Override
     public Long hashIncrement(String key, String hashKey, long delta) {
@@ -256,10 +247,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * 统计指定key的hash空间大小
-     *
-     * @param key
-     * @return
+     *  统计指定key的hash空间大小
+     * @param key   key
+     * @return  Long
      */
     @Override
     public Long hashSize(String key) {
@@ -273,10 +263,10 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 对指定key的指定hashKey进行设置
-     *
-     * @param key
-     * @param hashKey
-     * @param value
+     * @param key   key
+     * @param hashKey   hashKey
+     * @param value value
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void hashPut(String key, String hashKey, Object value) throws JsonProcessingException {
@@ -289,9 +279,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 对指定key进行批量操作
-     *
-     * @param key
-     * @param map
+     * @param key   key
+     * @param map   map
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void hashPutAll(String key, Map<String, Object> map) throws JsonProcessingException {
@@ -309,10 +299,11 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据Key获取所有Hash值并序列化返回
-     *
-     * @param key
-     * @param valueType
-     * @return
+     * @param key   key
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  Map
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public <T> Map<String, T> hashEntries(String key, Class<T> valueType) throws JsonProcessingException {
@@ -328,9 +319,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key获取所有Hash值
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  Map
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Map<String, String> hashEntries(String key) throws JsonProcessingException {
@@ -339,12 +330,13 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取list内范围值，并反序列化返回
-     *
-     * @param key
-     * @param start
-     * @param end
-     * @param valueType
-     * @return
+     * @param key   key
+     * @param start start
+     * @param end   end
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public <T> List<T> listRange(String key, long start, long end, Class<T> valueType) throws JsonProcessingException {
@@ -358,11 +350,11 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取list内范围值，并返回
-     *
-     * @param key
-     * @param start
-     * @param end
-     * @return
+     * @param key   key
+     * @param start start
+     * @param end   end
+     * @return  List
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public List<String> listRange(String key, long start, long end) throws JsonProcessingException {
@@ -371,10 +363,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 删除list首尾，只保留 [start, end] 之间的值
-     *
-     * @param key
-     * @param start
-     * @param end
+     * @param key   key
+     * @param start start
+     * @param end   end
      */
     @Override
     public void listTrim(String key, long start, long end) {
@@ -387,9 +378,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取指定key的大小
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  Long
      */
     @Override
     public Long listSize(String key) {
@@ -403,9 +393,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 向左push
-     *
-     * @param key
-     * @param object
+     * @param key   key
+     * @param object    object
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void listLeftPush(String key, Object object) throws JsonProcessingException {
@@ -418,9 +408,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 向左批量push
-     *
-     * @param key
-     * @param objects
+     * @param key   key
+     * @param objects   objects
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void listLeftPushAll(String key, Object... objects) throws JsonProcessingException {
@@ -440,9 +430,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 向右push
-     *
-     * @param key
-     * @param object
+     * @param key   key
+     * @param object    object
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void listRightPush(String key, Object object) throws JsonProcessingException {
@@ -455,9 +445,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 批量向右push
-     *
-     * @param key
-     * @param objects
+     * @param key   key
+     * @param objects   objects
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void listRightPushAll(String key, Object... objects) throws JsonProcessingException {
@@ -477,10 +467,10 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定插入在指定索引
-     *
-     * @param key
-     * @param index
-     * @param value
+     * @param key   key
+     * @param index index
+     * @param value value
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void listSet(String key, long index, Object value) throws JsonProcessingException {
@@ -493,9 +483,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 删除list上的指定索引
-     *
-     * @param key
-     * @param value
+     * @param key   key
+     * @param count count
+     * @param value value
      */
     @Override
     public void listRemove(String key, long count, Object value) {
@@ -508,10 +498,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取指定key的指定索引的值
-     *
-     * @param key
-     * @param index
-     * @return
+     * @param key   key
+     * @param index index
+     * @return  String
      */
     @Override
     public String listIndex(String key, long index) {
@@ -525,11 +514,13 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 获取指定key的指定索引的值反序列化返回
-     *
-     * @param key
-     * @param index
-     * @param valueType
-     * @return
+     * @param key   key
+     * @param index index
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
+     * @throws IOException  IOException
+     * @throws JsonParseException   JsonParseException
      */
     @Override
     public <T> T listIndex(String key, long index, Class<T> valueType) throws IOException, JsonParseException {
@@ -543,9 +534,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定key进行左Pop操作
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  String
      */
     @Override
     public String listLeftPop(String key) {
@@ -559,10 +549,12 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定key进行左pop操作并反序列化返回
-     *
-     * @param key
-     * @param valueType
-     * @return
+     * @param key   key
+     * @param valueType valueType
+     * @param <T>   T
+     * @return T
+     * @throws IOException  IOException
+     * @throws JsonParseException   JsonParseException
      */
     @Override
     public <T> T listLeftPop(String key, Class<T> valueType) throws IOException, JsonParseException {
@@ -576,9 +568,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定key进行右pop操作
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  String
      */
     @Override
     public String listRightPop(String key) {
@@ -592,12 +583,12 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 指定key进行右Pop操作
-     *
-     * @param key
-     * @param valueType
-     * @return
-     * @throws IOException
-     * @throws JsonParseException
+     * @param key   key
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
+     * @throws IOException  IOException
+     * @throws JsonParseException   JsonParseException
      */
     @Override
     public <T> T listRightPop(String key, Class<T> valueType) throws IOException, JsonParseException {
@@ -610,11 +601,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Add given {@code objects} to set at {@code key}.
-     *
-     * @param key
-     * @param objects
-     * @return
+     * Add given {code objects} to set at {code key}.
+     * @param key   key
+     * @param objects   objects
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long setAdd(String key, Object... objects) throws JsonProcessingException {
@@ -634,11 +625,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Remove given {@code objects} from set at {@code key} and return the number of removed elements.
-     *
-     * @param key
-     * @param objects
-     * @return
+     * Remove given {code objects} from set at {code key} and return the number of removed elements.
+     * @param key   key
+     * @param objects   objects
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long setRemove(String key, Object... objects) throws JsonProcessingException {
@@ -658,10 +649,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get size of set at {@code key}.
-     *
-     * @param key
-     * @return
+     * Get size of set at {code key}.
+     * @param key   key
+     * @return  Long
      */
     @Override
     public Long setSize(String key) {
@@ -674,11 +664,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Check if set at {@code key} contains {@code value}.
-     *
-     * @param key
-     * @param o
-     * @return
+     * Check if set at {code key} contains {code value}.
+     * @param key   key
+     * @param o object
+     * @return  Boolean
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Boolean setIsMember(String key, Object o) throws JsonProcessingException {
@@ -692,10 +682,10 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key获取指定Set，并序列化返回
-     *
-     * @param key
-     * @param valueType
-     * @return
+     * @param key   key
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
      */
     @Override
     public <T> Set<T> setMember(String key, Class<T> valueType) {
@@ -709,9 +699,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key获取指定Set
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  Set
      */
     @Override
     public Set<String> setMember(String key) {
@@ -724,12 +713,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Add {@code value} to a sorted set at {@code key}, or update its {@code score} if it already exists.
-     *
-     * @param key
-     * @param value
-     * @param score
-     * @return
+     * Add {code value} to a sorted set at {code key}, or update its {code score} if it already exists.
+     * @param key   key
+     * @param value value
+     * @param score score
+     * @return  Boolean
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Boolean zSetAddOne(String key, Object value, double score) throws JsonProcessingException {
@@ -742,11 +731,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Add {@code tuples} to a sorted set at {@code key}, or update its {@code score} if it already exists.
-     *
-     * @param key
-     * @param tuples
-     * @return
+     * Add {code tuples} to a sorted set at {code key}, or update its {code score} if it already exists.
+     * @param key   key
+     * @param tuples    tuples
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long zSetAdd(String key, Map<String, String> tuples) throws JsonProcessingException {
@@ -760,11 +749,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Remove {@code values} from sorted set. Return number of removed elements.
-     *
-     * @param key
-     * @param objects
-     * @return
+     * Remove {code values} from sorted set. Return number of removed elements.
+     * @param key   key
+     * @param objects   objects
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long zSetRemove(String key, Object... objects) throws JsonProcessingException {
@@ -784,12 +773,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Increment the score of element with {@code value} in sorted set by {@code increment}.
-     *
-     * @param key
-     * @param value
-     * @param delta
-     * @return
+     * Increment the score of element with {code value} in sorted set by {code increment}.
+     * @param key   key
+     * @param value value
+     * @param delta delta
+     * @return  Double
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Double zSetIncrementScore(String key, Object value, double delta) throws JsonProcessingException {
@@ -802,11 +791,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Determine the index of element with {@code value} in a sorted set.
-     *
-     * @param key
-     * @param object
-     * @return
+     * Determine the index of element with {code value} in a sorted set.
+     * @param key   key
+     * @param object    object
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long zSetRank(String key, Object object) throws JsonProcessingException {
@@ -819,11 +808,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Determine the index of element with {@code value} in a sorted set when scored high to low.
-     *
-     * @param key
-     * @param object
-     * @return
+     * Determine the index of element with {code value} in a sorted set when scored high to low.
+     * @param key   key
+     * @param object    object
+     * @return  Long
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Long zSetReverseRank(String key, Object object) throws JsonProcessingException {
@@ -836,13 +825,13 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get set of between {@code start} and {@code end} from sorted set.
-     *
-     * @param key
-     * @param start
-     * @param end
-     * @param valueType
-     * @return
+     *  Get set of between {code start} and {code end} from sorted set.
+     * @param key   key
+     * @param start start
+     * @param end   end
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  Map
      */
     @Override
     public <T> Map<T, Double> zSetRangeWithScores(String key, long start, long end, Class<T> valueType) {
@@ -855,13 +844,13 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get set of between {@code start} and {@code end} from sorted set.
-     *
-     * @param key
-     * @param start
-     * @param end
-     * @param valueType
-     * @return
+     * Get set of between {code start} and {code end} from sorted set.
+     * @param key   key
+     * @param start start
+     * @param end   end
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  Map
      */
     @Override
     public <T> Map<T, Double> zSetReverseRangeWithScores(String key, long start, long end, Class<T> valueType) {
@@ -874,15 +863,15 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get set of  in range from {@code start} to {@code end} where score is between {@code min} and
-     *
-     * @param key
-     * @param min
-     * @param max
-     * @param offset
-     * @param count
-     * @param valueType
-     * @return
+     * Get set of  in range from {code start} to {code end} where score is between {code min}
+     * @param key   key
+     * @param min   min
+     * @param max   max
+     * @param offset    offset
+     * @param count count
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  Map
      */
     @Override
     public <T> Map<T, Double> zSetRangeByScoreWithScores(String key, double min, double max, long offset, long count, Class<T> valueType) {
@@ -895,16 +884,16 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get set of  in range from {@code start} to {@code end} where score is between {@code min} and
-     * {@code max} from sorted set ordered high -> low.
-     *
-     * @param key
-     * @param min
-     * @param max
-     * @param offset
-     * @param count
-     * @param valueType
-     * @return
+     *  Get set of  in range from {code start} to {code end} where score is between {code min} and
+     *   {code max} from sorted set ordered high to low.
+     * @param key   key
+     * @param min   min
+     * @param max   max
+     * @param offset    offset
+     * @param count count
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  Map
      */
     @Override
     public <T> Map<T, Double> zSetReverseRangeByScoreWithScores(String key, double min, double max, long offset, long count, Class<T> valueType) {
@@ -917,12 +906,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Count number of elements within sorted set with scores between {@code min} and {@code max}.
-     *
-     * @param key
-     * @param min
-     * @param max
-     * @return
+     * Count number of elements within sorted set with scores between {code min} and {code max}.
+     * @param key   key
+     * @param min   min
+     * @param max   max
+     * @return  Long
      */
     @Override
     public Long zSetCount(String key, double min, double max) {
@@ -935,10 +923,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get the size of sorted set with {@code key}.
-     *
-     * @param key
-     * @return
+     * Get the size of sorted set with {code key}.
+     * @param key   key
+     * @return  Long
      */
     @Override
     public Long zSetCard(String key) {
@@ -951,11 +938,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get the score of element with {@code value} from sorted set with key {@code key}.
-     *
-     * @param key
-     * @param object
-     * @return
+     * Get the score of element with {code value} from sorted set with key {code key}.
+     * @param key   key
+     * @param object    object
+     * @return  Double
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Double zSetScore(String key, Object object) throws JsonProcessingException {
@@ -968,12 +955,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Remove elements in range between {@code start} and {@code end} from sorted set with {@code key}.
-     *
-     * @param key
-     * @param start
-     * @param end
-     * @return
+     * Remove elements in range between {code start} and {code end} from sorted set with {code key}.
+     * @param key   key
+     * @param start start
+     * @param end   end
+     * @return  Long
      */
     @Override
     public Long zSetRemoveRange(String key, long start, long end) {
@@ -986,12 +972,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Remove elements with scores between {@code min} and {@code max} from sorted set with {@code key}.
-     *
-     * @param key
-     * @param min
-     * @param max
-     * @return
+     * Remove elements with scores between {code min} and {code max} from sorted set with {code key}.
+     * @param key   key
+     * @param min   min
+     * @param max   max
+     * @return  Long
      */
     @Override
     public Long zSetRemoveByScore(String key, double min, double max) {
@@ -1004,10 +989,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code value} for {@code key}.
-     *
-     * @param key
-     * @param value
+     * Set {code value} for {code key}.
+     * @param key   key
+     * @param value value
      */
     @Override
     public void stringSet(String key, String value) {
@@ -1019,12 +1003,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set the {@code value} and expiration {@code timeout} for {@code key}.
-     *
-     * @param key
-     * @param value
-     * @param timeout
-     * @param unit
+     * Set the {code value} and expiration {code timeout} for {code key}.
+     * @param key   key
+     * @param value value
+     * @param timeout   timeout
+     * @param unit  unit
      */
     @Override
     public void stringSet(String key, String value, long timeout, TimeUnit unit) {
@@ -1036,11 +1019,10 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code key} to hold the string {@code value} if {@code key} is absent.
-     *
-     * @param key
-     * @param value
-     * @return
+     * Set {code key} to hold the string {code value} if {code key} is absent.
+     * @param key   key
+     * @param value value
+     * @return  Boolean
      */
     @Override
     public Boolean stringSetIfAbsent(String key, String value) {
@@ -1053,13 +1035,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
-     *
-     * @param key
-     * @param value
-     * @param timeout
-     * @param unit
-     * @return
+     *  Set {code key} to hold the string {code value} and expiration {code timeout} if {code key} is absent.
+     * @param key   key
+     * @param value value
+     * @param timeout   timeout
+     * @param unit  unit
+     * @return  Boolean
      */
     @Override
     public Boolean stringSetIfAbsent(String key, String value, long timeout, TimeUnit unit) {
@@ -1074,9 +1055,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 默认返回String值
-     *
-     * @param key
-     * @return
+     * @param key   key
+     * @return  String
      */
     @Override
     public String stringGet(String key) {
@@ -1090,11 +1070,11 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 根据key查询并反序列化
-     *
-     * @param key
-     * @param valueType
-     * @param <T>
-     * @return
+     * @param key   key
+     * @param valueType valueType
+     * @param <T>   T
+     * @return  T
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public <T> T stringGet(String key, Class<T> valueType) throws JsonProcessingException {
@@ -1107,10 +1087,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Get multiple {@code keys}. Values are returned in the order of the requested keys.
-     *
-     * @param keys
-     * @return
+     * Get multiple {code keys}. Values are returned in the order of the requested keys.
+     * @param keys  keys
+     * @return  List
      */
     @Override
     public List<String> stringMultiGet(String... keys) {
@@ -1123,11 +1102,10 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Increment an integer value stored as string value under {@code key} by {@code delta}.
-     *
-     * @param key
-     * @param delta
-     * @return
+     * Increment an integer value stored as string value under {code key} by {code delta}.
+     * @param key   key
+     * @param delta delta
+     * @return  Long
      */
     @Override
     public Long stringIncrement(String key, long delta) {
@@ -1140,11 +1118,10 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Decrement an integer value stored as string value under {@code key} by {@code delta}.
-     *
-     * @param key
-     * @param delta
-     * @return
+     * Decrement an integer value stored as string value under {code key} by {code delta}.
+     * @param key   key
+     * @param delta delta
+     * @return  Long
      */
     @Override
     public Long stringDecrement(String key, long delta) {
@@ -1157,10 +1134,10 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code value} for {@code key}.
-     *
-     * @param key
-     * @param value
+     * Set {code value} for {code key}.
+     * @param key   key
+     * @param value value
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void stringSet(String key, Object value) throws JsonProcessingException {
@@ -1172,12 +1149,12 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set the {@code value} and expiration {@code timeout} for {@code key}.
-     *
-     * @param key
-     * @param value
-     * @param timeout
-     * @param unit
+     * Set the {code value} and expiration {code timeout} for {code key}.
+     * @param key   key
+     * @param value value
+     * @param timeout   timeout
+     * @param unit  unit
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void stringSet(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
@@ -1190,11 +1167,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code key} to hold the string {@code value} if {@code key} is absent.
-     *
-     * @param key
-     * @param value
-     * @return
+     * Set {code key} to hold the string {code value} if {code key} is absent.
+     * @param key   key
+     * @param value value
+     * @return  Boolean
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Boolean stringSetIfAbsent(String key, Object value) throws JsonProcessingException {
@@ -1208,13 +1185,13 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set {@code key} to hold the string {@code value} and expiration {@code timeout} if {@code key} is absent.
-     *
-     * @param key
-     * @param value
-     * @param timeout
-     * @param unit
-     * @return
+     * Set {code key} to hold the string {code value} and expiration {code timeout} if {code key} is absent.
+     * @param key   key
+     * @param value value
+     * @param timeout   timeout
+     * @param unit  unit
+     * @return  Boolean
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Boolean stringSetIfAbsent(String key, Object value, long timeout, TimeUnit unit) throws JsonProcessingException {
@@ -1227,9 +1204,9 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple}.
-     *
-     * @param map
+     *  Set multiple keys to multiple values using key-value pairs provided in {code tuple}.
+     * @param map   map
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public void stringMultiSet(Map<String, Object> map) throws JsonProcessingException {
@@ -1246,11 +1223,11 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
-     * Set multiple keys to multiple values using key-value pairs provided in {@code tuple} only if the provided key does
-     * not exist.
-     *
-     * @param map
-     * @return
+     *  Set multiple keys to multiple values using key-value pairs provided in {code tuple} only if the provided key does
+     *  not exist.
+     * @param map   map
+     * @return  Boolean
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public Boolean stringMultiSetIfAbsent(Map<String, Object> map) throws JsonProcessingException {
@@ -1278,9 +1255,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 对象转String
-     *
-     * @param object
-     * @return
+     * @param object    object
+     * @return  String
+     * @throws JsonProcessingException  JsonProcessingException
      */
     @Override
     public String convertString(Object object) throws JsonProcessingException {
@@ -1325,10 +1302,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 输出返回定义
-     *
-     * @param requestPath
-     * @param requestBean
-     * @return
+     * @param requestPath   requestPath
+     * @param requestBean   requestBean
+     * @return  ResponseBean
      */
     private ResponseBean call(RequestPath requestPath, RequestBean requestBean) {
         Request request = null;

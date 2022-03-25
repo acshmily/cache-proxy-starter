@@ -27,7 +27,7 @@ import java.util.concurrent.*;
 public class CacheClientAutoConfiguration {
     /**
      * 创建连接池
-     * @return
+     * @return 返回实例
      */
     @Bean("cache-client-Executor")
     public ExecutorService cacheExecutor(){
@@ -48,8 +48,8 @@ public class CacheClientAutoConfiguration {
 
     /**
      * 手动初始化对象
-     * @param cacheClientProperties
-     * @return
+     * @param cacheClientProperties cacheClientProperties
+     * @return 返回实例
      */
     public ExecutorService cacheExecutor(CacheClientProperties cacheClientProperties){
         log.info(">-----------开始初始化缓存插件线程池------------->");
@@ -69,7 +69,7 @@ public class CacheClientAutoConfiguration {
 
     /**
      * 创建OkHttp归属于Spring 管理
-     * @return
+     * @return 返回实例
      */
     @Bean("cache-client-httpclient")
     public OkHttpClient okHttpClient(){
@@ -105,8 +105,8 @@ public class CacheClientAutoConfiguration {
 
     /**
      * 手动初始化对象
-     * @param cacheClientProperties
-     * @return
+     * @param cacheClientProperties 配置信息
+     * @return 返回实例
      */
     public OkHttpClient okHttpClient(CacheClientProperties cacheClientProperties){
         log.info(">-----------开始初始化缓存插件OkHttp------------>");
@@ -141,7 +141,7 @@ public class CacheClientAutoConfiguration {
 
     /**
      * 初始化缓存客户端实现类
-     * @return
+     * @return 返回实例
      */
     @Bean
     public CacheTemplate cacheTemplate(){
@@ -151,8 +151,8 @@ public class CacheClientAutoConfiguration {
 
     /**
      * 手动初始化的时候需要
-     * @param cacheClientProperties
-     * @return
+     * @param cacheClientProperties cacheClientProperties
+     * @return  CacheTemplate
      */
     public CacheTemplate cacheTemplate(CacheClientProperties cacheClientProperties){
         return new CacheTemplateImpl(okHttpClient(cacheClientProperties),cacheClientProperties.getUrl(),objectMapper());
