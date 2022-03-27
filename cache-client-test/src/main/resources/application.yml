@@ -1,8 +1,0 @@
-acshmily:
-  cache:
-    user-name: ai-test
-    password: test
-    url: http://127.0.0.1:8080
-#    url: http://192.168.29.109:8090
-server:
-  port: 8081

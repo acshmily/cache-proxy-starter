@@ -7,7 +7,7 @@
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-	<groupId>com.github.acshmily</groupId>
+	<groupId>io.github.acshmily</groupId>
 	<artifactId>cache-springboot-starter</artifactId>
 	<version>1.1</version>
 	<name>cache-springboot-starter</name>
@@ -103,14 +103,14 @@
 			<id>sonatype_releases</id>
 			<name>Nexus Release Repository</name>
 			<!-- 这里就是在创建issue成功后，对方回复的release发布地址-->
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
 			<!-- 这里的id必须要和全局配置中的snapshot id 一致 -->
 			<id>sonatype_snapshots</id>
 			<name>Nexus Snapshot Repository</name>
 			<!-- 这里就是在创建issue成功后，对方回复的snapshot发布地址-->
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 	<build>
@@ -125,7 +125,7 @@
 					<serverId>sonatype_releases</serverId>
 					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 					<!-- 如果希望发布后自动执行close和release操作，此处可以调整为true -->
-					<autoReleaseAfterClose>false</autoReleaseAfterClose>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
 
