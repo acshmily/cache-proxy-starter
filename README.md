@@ -3,9 +3,9 @@
 ## maven
 ```xml
 <dependency>
-    <groupId>io.github.acshmily</groupId>
+    <groupId>com.github.acshmily</groupId>
     <artifactId>cache-springboot-starter</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 
 
