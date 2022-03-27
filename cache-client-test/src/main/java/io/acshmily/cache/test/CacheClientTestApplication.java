@@ -1,6 +1,6 @@
 package io.acshmily.cache.test;
 
-import io.acshmily.cachetemplate.autoconfigure.announce.EnableCacheTemplate;
+import io.acshmily.cachetemplate.client.announce.EnableCacheTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

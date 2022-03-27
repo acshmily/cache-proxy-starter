@@ -1,6 +1,6 @@
 package io.acshmily.cache.test;
 
-import io.acshmily.cachetemplate.autoconfigure.service.CacheTemplate;
+import io.acshmily.cachetemplate.client.service.CacheTemplate;
 import io.acshmily.cache.test.bean.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

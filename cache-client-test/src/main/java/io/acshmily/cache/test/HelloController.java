@@ -1,6 +1,6 @@
 package io.acshmily.cache.test;
 
-import io.acshmily.cachetemplate.autoconfigure.service.CacheTemplate;
+import io.acshmily.cachetemplate.client.service.CacheTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
