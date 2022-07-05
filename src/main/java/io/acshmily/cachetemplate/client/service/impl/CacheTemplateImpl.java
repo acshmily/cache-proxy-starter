@@ -714,8 +714,8 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 去重返回数据
-     * @param key
-     * @param count
+     * @param key key
+     * @param count count
      * @return
      */
     @Override
@@ -731,9 +731,9 @@ public class CacheTemplateImpl implements CacheTemplate {
 
     /**
      * 去重返回数据
-     * @param key
-     * @param count
-     * @param valueType
+     * @param key key
+     * @param count count
+     * @param valueType valueType
      * @return
      */
     @Override
