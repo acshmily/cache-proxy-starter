@@ -713,6 +713,41 @@ public class CacheTemplateImpl implements CacheTemplate {
     }
 
     /**
+     * 去重返回数据
+     * @param key
+     * @param count
+     * @return
+     */
+    @Override
+    public Set<String> distinctRandomMembers(String key, Long count) {
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.distinctRandomMembers);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET, request);
+        return ((List<String>) responseBean.getData()).stream().collect(Collectors.toSet());
+
+    }
+
+    /**
+     * 去重返回数据
+     * @param key
+     * @param count
+     * @param valueType
+     * @return
+     */
+    @Override
+    public <T> Set<T> distinctRandomMembers(String key, Long count, Class<T> valueType) {
+        RequestBean request = new RequestBean();
+        request.setCmd(SetCmdEnum.distinctRandomMembers);
+        LinkedList<Object> args = new LinkedList<>(Arrays.asList(key));
+        request.setArgs(args);
+        ResponseBean responseBean = call(RequestPath.SET, request);
+        return ((List<T>) responseBean.getData()).stream().collect(Collectors.toSet());
+
+    }
+
+    /**
      * Add {code value} to a sorted set at {code key}, or update its {code score} if it already exists.
      * @param key   key
      * @param value value

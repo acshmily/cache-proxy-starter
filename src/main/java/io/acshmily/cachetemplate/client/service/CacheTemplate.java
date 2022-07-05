@@ -356,6 +356,22 @@ public interface CacheTemplate {
     Set<String> setMember(String key);
 
     /**
+     * 去重返回key里的set
+     * @param key
+     * @param count
+     * @return
+     */
+    Set<String> distinctRandomMembers(String key,Long count);
+
+    /**
+     * 去重返回key里的set
+     * @param key
+     * @param count
+     * @return
+     * @param <T>
+     */
+    <T> Set<T> distinctRandomMembers(String key,Long count,Class<T> valueType);
+    /**
      * Add {code value} to a sorted set at {code key}, or update its {code score} if it already exists.
      * @param key   key
      * @param value value

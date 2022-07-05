@@ -7,5 +7,5 @@ package io.acshmily.cachetemplate.client.emun;
  * ModifyBy:
  **/
 public enum SetCmdEnum implements CacheTemplateCmd {
-    add,remove,size,isMember,members
+    add,remove,size,isMember,members,distinctRandomMembers
 }
