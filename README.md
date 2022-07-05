@@ -5,7 +5,7 @@
 <dependency>
     <groupId>io.github.acshmily</groupId>
     <artifactId>cache-springboot-starter</artifactId>
-    <version>1.2</version>
+    <version>1.3</version>
 </dependency>
 
 
